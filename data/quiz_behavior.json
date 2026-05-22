@@ -1,6 +1,6 @@
 {
   "meta": {
-    "schema_version": "2.0",
+    "schema_version": "2.1",
     "semester": "1141",
     "semesters": [
       "1111",
@@ -13,129 +13,3640 @@
       "1142"
     ],
     "semester_range": "111(1)-114(2)",
-    "semester_range_label": "111(1)-114(2)",
-    "generated_at": "2026-05-07T14:11:51",
-    "total_weeks": 17
+    "generated_at": "2026-05-20T19:44:26",
+    "total_weeks": 18
   },
   "weeks": [
     {
       "week": 1,
       "title": "第1週 練習題庫",
-      "pass_group_avg_attempts": 139.41,
-      "fail_group_avg_attempts": 100.16,
-      "overall_pass_rate": 0.7637
+      "pass_group_avg_attempts": 98.08,
+      "fail_group_avg_attempts": 31.86,
+      "active_students": 292,
+      "segments": {
+        "1112|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 11.18,
+          "active_students": 40,
+          "overall_pass_rate": 0.7637
+        },
+        "1121|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 19.38,
+          "active_students": 56,
+          "overall_pass_rate": 0.7637
+        },
+        "1112|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 25.4,
+          "active_students": 80,
+          "overall_pass_rate": 0.7637
+        },
+        "1112|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 21.11,
+          "active_students": 75,
+          "overall_pass_rate": 0.7637
+        },
+        "1121|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 57.87,
+          "active_students": 75,
+          "overall_pass_rate": 0.7637
+        },
+        "1121|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 63.08,
+          "active_students": 86,
+          "overall_pass_rate": 0.7637
+        },
+        "all|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 26.34,
+          "active_students": 217,
+          "overall_pass_rate": 0.7637
+        },
+        "all|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 113.47,
+          "active_students": 292,
+          "overall_pass_rate": 0.7637
+        },
+        "all|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 93.29,
+          "active_students": 266,
+          "overall_pass_rate": 0.7637
+        },
+        "1132|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 17.51,
+          "active_students": 69,
+          "overall_pass_rate": 0.7637
+        },
+        "1122|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 12.23,
+          "active_students": 43,
+          "overall_pass_rate": 0.7637
+        },
+        "1132|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 30.15,
+          "active_students": 87,
+          "overall_pass_rate": 0.7637
+        },
+        "1111|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 21.12,
+          "active_students": 43,
+          "overall_pass_rate": 0.7637
+        },
+        "1141|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 15.55,
+          "active_students": 60,
+          "overall_pass_rate": 0.7637
+        },
+        "1122|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 28.63,
+          "active_students": 89,
+          "overall_pass_rate": 0.7637
+        },
+        "1132|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 21.12,
+          "active_students": 67,
+          "overall_pass_rate": 0.7637
+        },
+        "1111|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 109.1,
+          "active_students": 70,
+          "overall_pass_rate": 0.7637
+        },
+        "1122|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 25.27,
+          "active_students": 80,
+          "overall_pass_rate": 0.7637
+        },
+        "1141|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 64.17,
+          "active_students": 84,
+          "overall_pass_rate": 0.7637
+        },
+        "1111|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 108.18,
+          "active_students": 62,
+          "overall_pass_rate": 0.7637
+        },
+        "1142|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7637
+        },
+        "1141|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 64.59,
+          "active_students": 69,
+          "overall_pass_rate": 0.7637
+        },
+        "1131|all|fail": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 16.43,
+          "active_students": 37,
+          "overall_pass_rate": 0.7637
+        },
+        "1131|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 62.01,
+          "active_students": 79,
+          "overall_pass_rate": 0.7637
+        },
+        "1131|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 58.78,
+          "active_students": 73,
+          "overall_pass_rate": 0.7637
+        },
+        "1142|all|all": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 27.44,
+          "active_students": 94,
+          "overall_pass_rate": 0.7637
+        },
+        "1142|all|pass": {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7637
+        }
+      },
+      "overall_pass_rate": 0.7637,
+      "avg_final_score": 0.7637
     },
     {
       "week": 2,
       "title": "第2週 練習題庫",
-      "pass_group_avg_attempts": 114.09,
-      "fail_group_avg_attempts": 88.02,
-      "overall_pass_rate": 0.8124
+      "pass_group_avg_attempts": 84.93,
+      "fail_group_avg_attempts": 25.71,
+      "active_students": 292,
+      "segments": {
+        "1112|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 14.45,
+          "active_students": 40,
+          "overall_pass_rate": 0.8124
+        },
+        "1121|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 8.36,
+          "active_students": 56,
+          "overall_pass_rate": 0.8124
+        },
+        "1112|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 27.79,
+          "active_students": 80,
+          "overall_pass_rate": 0.8124
+        },
+        "1112|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 21.92,
+          "active_students": 75,
+          "overall_pass_rate": 0.8124
+        },
+        "1121|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 30.84,
+          "active_students": 75,
+          "overall_pass_rate": 0.8124
+        },
+        "1121|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 32.34,
+          "active_students": 86,
+          "overall_pass_rate": 0.8124
+        },
+        "all|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 20.69,
+          "active_students": 217,
+          "overall_pass_rate": 0.8124
+        },
+        "all|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 96.86,
+          "active_students": 292,
+          "overall_pass_rate": 0.8124
+        },
+        "all|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 81.26,
+          "active_students": 266,
+          "overall_pass_rate": 0.8124
+        },
+        "1132|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 15.39,
+          "active_students": 69,
+          "overall_pass_rate": 0.8124
+        },
+        "1122|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 11.58,
+          "active_students": 43,
+          "overall_pass_rate": 0.8124
+        },
+        "1132|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 26.02,
+          "active_students": 87,
+          "overall_pass_rate": 0.8124
+        },
+        "1111|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 15.77,
+          "active_students": 43,
+          "overall_pass_rate": 0.8124
+        },
+        "1141|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 12.83,
+          "active_students": 60,
+          "overall_pass_rate": 0.8124
+        },
+        "1122|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 27.71,
+          "active_students": 89,
+          "overall_pass_rate": 0.8124
+        },
+        "1132|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 17.94,
+          "active_students": 67,
+          "overall_pass_rate": 0.8124
+        },
+        "1111|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 113.43,
+          "active_students": 70,
+          "overall_pass_rate": 0.8124
+        },
+        "1122|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 24.6,
+          "active_students": 80,
+          "overall_pass_rate": 0.8124
+        },
+        "1141|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 53.23,
+          "active_students": 84,
+          "overall_pass_rate": 0.8124
+        },
+        "1111|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 116.76,
+          "active_students": 62,
+          "overall_pass_rate": 0.8124
+        },
+        "1142|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.8124
+        },
+        "1141|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 53.64,
+          "active_students": 69,
+          "overall_pass_rate": 0.8124
+        },
+        "1131|all|fail": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 11.78,
+          "active_students": 37,
+          "overall_pass_rate": 0.8124
+        },
+        "1131|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 50.43,
+          "active_students": 79,
+          "overall_pass_rate": 0.8124
+        },
+        "1131|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 48.6,
+          "active_students": 73,
+          "overall_pass_rate": 0.8124
+        },
+        "1142|all|all": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 23.15,
+          "active_students": 93,
+          "overall_pass_rate": 0.8124
+        },
+        "1142|all|pass": {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.8124
+        }
+      },
+      "overall_pass_rate": 0.8124,
+      "avg_final_score": 0.8124
     },
     {
       "week": 3,
       "title": "第3週 練習題庫",
-      "pass_group_avg_attempts": 123.71,
-      "fail_group_avg_attempts": 90.7,
-      "overall_pass_rate": 0.7647
+      "pass_group_avg_attempts": 89.57,
+      "fail_group_avg_attempts": 26.48,
+      "active_students": 291,
+      "segments": {
+        "1112|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 10.05,
+          "active_students": 40,
+          "overall_pass_rate": 0.7647
+        },
+        "1121|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 16.75,
+          "active_students": 55,
+          "overall_pass_rate": 0.7647
+        },
+        "1112|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 25.39,
+          "active_students": 80,
+          "overall_pass_rate": 0.7647
+        },
+        "1112|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 21.71,
+          "active_students": 75,
+          "overall_pass_rate": 0.7647
+        },
+        "1121|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 48.72,
+          "active_students": 75,
+          "overall_pass_rate": 0.7647
+        },
+        "1121|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 53.82,
+          "active_students": 85,
+          "overall_pass_rate": 0.7647
+        },
+        "all|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 22.0,
+          "active_students": 216,
+          "overall_pass_rate": 0.7647
+        },
+        "all|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 101.93,
+          "active_students": 291,
+          "overall_pass_rate": 0.7647
+        },
+        "all|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 85.62,
+          "active_students": 266,
+          "overall_pass_rate": 0.7647
+        },
+        "1132|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 15.78,
+          "active_students": 69,
+          "overall_pass_rate": 0.7647
+        },
+        "1122|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 7.72,
+          "active_students": 43,
+          "overall_pass_rate": 0.7647
+        },
+        "1132|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 27.92,
+          "active_students": 87,
+          "overall_pass_rate": 0.7647
+        },
+        "1111|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 17.56,
+          "active_students": 43,
+          "overall_pass_rate": 0.7647
+        },
+        "1141|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 12.73,
+          "active_students": 60,
+          "overall_pass_rate": 0.7647
+        },
+        "1122|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 20.12,
+          "active_students": 89,
+          "overall_pass_rate": 0.7647
+        },
+        "1132|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 20.0,
+          "active_students": 67,
+          "overall_pass_rate": 0.7647
+        },
+        "1111|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 102.03,
+          "active_students": 70,
+          "overall_pass_rate": 0.7647
+        },
+        "1122|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 18.24,
+          "active_students": 80,
+          "overall_pass_rate": 0.7647
+        },
+        "1141|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 61.05,
+          "active_students": 84,
+          "overall_pass_rate": 0.7647
+        },
+        "1111|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 102.74,
+          "active_students": 62,
+          "overall_pass_rate": 0.7647
+        },
+        "1142|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7647
+        },
+        "1141|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 63.25,
+          "active_students": 69,
+          "overall_pass_rate": 0.7647
+        },
+        "1131|all|fail": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 13.24,
+          "active_students": 37,
+          "overall_pass_rate": 0.7647
+        },
+        "1131|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 56.32,
+          "active_students": 79,
+          "overall_pass_rate": 0.7647
+        },
+        "1131|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 54.23,
+          "active_students": 73,
+          "overall_pass_rate": 0.7647
+        },
+        "1142|all|all": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 22.76,
+          "active_students": 93,
+          "overall_pass_rate": 0.7647
+        },
+        "1142|all|pass": {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7647
+        }
+      },
+      "overall_pass_rate": 0.7647,
+      "avg_final_score": 0.7647
     },
     {
       "week": 4,
       "title": "第4週 練習題庫",
-      "pass_group_avg_attempts": 76.73,
-      "fail_group_avg_attempts": 64.82,
-      "overall_pass_rate": 0.8106
+      "pass_group_avg_attempts": 60.97,
+      "fail_group_avg_attempts": 17.35,
+      "active_students": 291,
+      "segments": {
+        "1112|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 7.42,
+          "active_students": 40,
+          "overall_pass_rate": 0.8106
+        },
+        "1121|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 11.76,
+          "active_students": 55,
+          "overall_pass_rate": 0.8106
+        },
+        "1112|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 19.16,
+          "active_students": 80,
+          "overall_pass_rate": 0.8106
+        },
+        "1112|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 16.45,
+          "active_students": 75,
+          "overall_pass_rate": 0.8106
+        },
+        "1121|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 36.05,
+          "active_students": 75,
+          "overall_pass_rate": 0.8106
+        },
+        "1121|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 39.42,
+          "active_students": 85,
+          "overall_pass_rate": 0.8106
+        },
+        "all|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 15.42,
+          "active_students": 216,
+          "overall_pass_rate": 0.8106
+        },
+        "all|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 68.87,
+          "active_students": 291,
+          "overall_pass_rate": 0.8106
+        },
+        "all|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 57.82,
+          "active_students": 266,
+          "overall_pass_rate": 0.8106
+        },
+        "1132|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 8.39,
+          "active_students": 69,
+          "overall_pass_rate": 0.8106
+        },
+        "1122|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 14.0,
+          "active_students": 43,
+          "overall_pass_rate": 0.8106
+        },
+        "1132|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 15.07,
+          "active_students": 87,
+          "overall_pass_rate": 0.8106
+        },
+        "1111|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 13.37,
+          "active_students": 43,
+          "overall_pass_rate": 0.8106
+        },
+        "1141|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 6.45,
+          "active_students": 60,
+          "overall_pass_rate": 0.8106
+        },
+        "1122|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 29.83,
+          "active_students": 89,
+          "overall_pass_rate": 0.8106
+        },
+        "1132|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 10.93,
+          "active_students": 67,
+          "overall_pass_rate": 0.8106
+        },
+        "1111|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 73.43,
+          "active_students": 70,
+          "overall_pass_rate": 0.8106
+        },
+        "1122|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 25.66,
+          "active_students": 80,
+          "overall_pass_rate": 0.8106
+        },
+        "1141|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 29.81,
+          "active_students": 84,
+          "overall_pass_rate": 0.8106
+        },
+        "1111|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 73.26,
+          "active_students": 62,
+          "overall_pass_rate": 0.8106
+        },
+        "1142|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.8106
+        },
+        "1141|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 30.68,
+          "active_students": 69,
+          "overall_pass_rate": 0.8106
+        },
+        "1131|all|fail": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 6.57,
+          "active_students": 37,
+          "overall_pass_rate": 0.8106
+        },
+        "1131|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 28.38,
+          "active_students": 79,
+          "overall_pass_rate": 0.8106
+        },
+        "1131|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 27.38,
+          "active_students": 73,
+          "overall_pass_rate": 0.8106
+        },
+        "1142|all|all": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 14.04,
+          "active_students": 93,
+          "overall_pass_rate": 0.8106
+        },
+        "1142|all|pass": {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.8106
+        }
+      },
+      "overall_pass_rate": 0.8106,
+      "avg_final_score": 0.8106
     },
     {
       "week": 5,
       "title": "第5週 練習題庫",
-      "pass_group_avg_attempts": 119.65,
-      "fail_group_avg_attempts": 81.45,
-      "overall_pass_rate": 0.7203
+      "pass_group_avg_attempts": 81.73,
+      "fail_group_avg_attempts": 26.08,
+      "active_students": 291,
+      "segments": {
+        "1112|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 7.4,
+          "active_students": 40,
+          "overall_pass_rate": 0.7203
+        },
+        "1121|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 14.62,
+          "active_students": 55,
+          "overall_pass_rate": 0.7203
+        },
+        "1112|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 19.4,
+          "active_students": 80,
+          "overall_pass_rate": 0.7203
+        },
+        "1112|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 16.73,
+          "active_students": 75,
+          "overall_pass_rate": 0.7203
+        },
+        "1121|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 44.92,
+          "active_students": 75,
+          "overall_pass_rate": 0.7203
+        },
+        "1121|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 49.09,
+          "active_students": 85,
+          "overall_pass_rate": 0.7203
+        },
+        "all|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 21.07,
+          "active_students": 216,
+          "overall_pass_rate": 0.7203
+        },
+        "all|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 94.44,
+          "active_students": 291,
+          "overall_pass_rate": 0.7203
+        },
+        "all|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 78.24,
+          "active_students": 266,
+          "overall_pass_rate": 0.7203
+        },
+        "1132|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 15.91,
+          "active_students": 69,
+          "overall_pass_rate": 0.7203
+        },
+        "1122|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 13.53,
+          "active_students": 43,
+          "overall_pass_rate": 0.7203
+        },
+        "1132|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 26.83,
+          "active_students": 87,
+          "overall_pass_rate": 0.7203
+        },
+        "1111|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 14.09,
+          "active_students": 43,
+          "overall_pass_rate": 0.7203
+        },
+        "1141|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 10.98,
+          "active_students": 60,
+          "overall_pass_rate": 0.7203
+        },
+        "1122|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 29.3,
+          "active_students": 89,
+          "overall_pass_rate": 0.7203
+        },
+        "1132|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 18.45,
+          "active_students": 67,
+          "overall_pass_rate": 0.7203
+        },
+        "1111|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 77.11,
+          "active_students": 70,
+          "overall_pass_rate": 0.7203
+        },
+        "1122|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 25.32,
+          "active_students": 80,
+          "overall_pass_rate": 0.7203
+        },
+        "1141|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 57.74,
+          "active_students": 84,
+          "overall_pass_rate": 0.7203
+        },
+        "1111|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 76.85,
+          "active_students": 62,
+          "overall_pass_rate": 0.7203
+        },
+        "1142|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7203
+        },
+        "1141|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 60.74,
+          "active_students": 69,
+          "overall_pass_rate": 0.7203
+        },
+        "1131|all|fail": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 13.7,
+          "active_students": 37,
+          "overall_pass_rate": 0.7203
+        },
+        "1131|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 56.68,
+          "active_students": 79,
+          "overall_pass_rate": 0.7203
+        },
+        "1131|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 54.4,
+          "active_students": 73,
+          "overall_pass_rate": 0.7203
+        },
+        "1142|all|all": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 22.47,
+          "active_students": 93,
+          "overall_pass_rate": 0.7203
+        },
+        "1142|all|pass": {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7203
+        }
+      },
+      "overall_pass_rate": 0.7203,
+      "avg_final_score": 0.7203
     },
     {
       "week": 6,
       "title": "第6週 練習題庫",
-      "pass_group_avg_attempts": 105.17,
-      "fail_group_avg_attempts": 78.19,
-      "overall_pass_rate": 0.707
+      "pass_group_avg_attempts": 76.0,
+      "fail_group_avg_attempts": 23.65,
+      "active_students": 291,
+      "segments": {
+        "1112|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 9.6,
+          "active_students": 40,
+          "overall_pass_rate": 0.707
+        },
+        "1121|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 16.96,
+          "active_students": 55,
+          "overall_pass_rate": 0.707
+        },
+        "1112|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 20.76,
+          "active_students": 80,
+          "overall_pass_rate": 0.707
+        },
+        "1112|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 16.95,
+          "active_students": 75,
+          "overall_pass_rate": 0.707
+        },
+        "1121|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 41.59,
+          "active_students": 75,
+          "overall_pass_rate": 0.707
+        },
+        "1121|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 47.67,
+          "active_students": 85,
+          "overall_pass_rate": 0.707
+        },
+        "all|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 20.58,
+          "active_students": 216,
+          "overall_pass_rate": 0.707
+        },
+        "all|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 87.37,
+          "active_students": 291,
+          "overall_pass_rate": 0.707
+        },
+        "all|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 71.99,
+          "active_students": 266,
+          "overall_pass_rate": 0.707
+        },
+        "1132|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 13.67,
+          "active_students": 69,
+          "overall_pass_rate": 0.707
+        },
+        "1122|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 12.26,
+          "active_students": 43,
+          "overall_pass_rate": 0.707
+        },
+        "1132|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 23.24,
+          "active_students": 87,
+          "overall_pass_rate": 0.707
+        },
+        "1111|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 13.91,
+          "active_students": 43,
+          "overall_pass_rate": 0.707
+        },
+        "1141|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 10.05,
+          "active_students": 60,
+          "overall_pass_rate": 0.707
+        },
+        "1122|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 26.93,
+          "active_students": 89,
+          "overall_pass_rate": 0.707
+        },
+        "1132|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 16.1,
+          "active_students": 67,
+          "overall_pass_rate": 0.707
+        },
+        "1111|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 81.83,
+          "active_students": 70,
+          "overall_pass_rate": 0.707
+        },
+        "1122|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 23.38,
+          "active_students": 80,
+          "overall_pass_rate": 0.707
+        },
+        "1141|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 49.05,
+          "active_students": 84,
+          "overall_pass_rate": 0.707
+        },
+        "1111|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 81.81,
+          "active_students": 62,
+          "overall_pass_rate": 0.707
+        },
+        "1142|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.707
+        },
+        "1141|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 50.97,
+          "active_students": 69,
+          "overall_pass_rate": 0.707
+        },
+        "1131|all|fail": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 12.35,
+          "active_students": 37,
+          "overall_pass_rate": 0.707
+        },
+        "1131|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 46.56,
+          "active_students": 79,
+          "overall_pass_rate": 0.707
+        },
+        "1131|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 44.12,
+          "active_students": 73,
+          "overall_pass_rate": 0.707
+        },
+        "1142|all|all": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 18.99,
+          "active_students": 93,
+          "overall_pass_rate": 0.707
+        },
+        "1142|all|pass": {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.707
+        }
+      },
+      "overall_pass_rate": 0.707,
+      "avg_final_score": 0.707
     },
     {
       "week": 7,
       "title": "第7週 練習題庫",
-      "pass_group_avg_attempts": 95.47,
-      "fail_group_avg_attempts": 63.79,
-      "overall_pass_rate": 0.6975
+      "pass_group_avg_attempts": 64.4,
+      "fail_group_avg_attempts": 20.75,
+      "active_students": 291,
+      "segments": {
+        "1112|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 7.6,
+          "active_students": 40,
+          "overall_pass_rate": 0.6975
+        },
+        "1121|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 11.47,
+          "active_students": 55,
+          "overall_pass_rate": 0.6975
+        },
+        "1112|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 16.32,
+          "active_students": 80,
+          "overall_pass_rate": 0.6975
+        },
+        "1112|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 13.28,
+          "active_students": 75,
+          "overall_pass_rate": 0.6975
+        },
+        "1121|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 34.27,
+          "active_students": 75,
+          "overall_pass_rate": 0.6975
+        },
+        "1121|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 37.66,
+          "active_students": 85,
+          "overall_pass_rate": 0.6975
+        },
+        "all|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 16.82,
+          "active_students": 216,
+          "overall_pass_rate": 0.6975
+        },
+        "all|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 74.57,
+          "active_students": 291,
+          "overall_pass_rate": 0.6975
+        },
+        "all|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 61.57,
+          "active_students": 266,
+          "overall_pass_rate": 0.6975
+        },
+        "1132|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 11.8,
+          "active_students": 69,
+          "overall_pass_rate": 0.6975
+        },
+        "1122|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 10.29,
+          "active_students": 41,
+          "overall_pass_rate": 0.6975
+        },
+        "1132|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 20.21,
+          "active_students": 87,
+          "overall_pass_rate": 0.6975
+        },
+        "1111|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 13.42,
+          "active_students": 43,
+          "overall_pass_rate": 0.6975
+        },
+        "1141|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 8.47,
+          "active_students": 60,
+          "overall_pass_rate": 0.6975
+        },
+        "1122|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 20.08,
+          "active_students": 88,
+          "overall_pass_rate": 0.6975
+        },
+        "1132|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 14.09,
+          "active_students": 67,
+          "overall_pass_rate": 0.6975
+        },
+        "1111|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 64.5,
+          "active_students": 70,
+          "overall_pass_rate": 0.6975
+        },
+        "1122|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 17.03,
+          "active_students": 79,
+          "overall_pass_rate": 0.6975
+        },
+        "1141|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 47.87,
+          "active_students": 84,
+          "overall_pass_rate": 0.6975
+        },
+        "1111|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 63.18,
+          "active_students": 62,
+          "overall_pass_rate": 0.6975
+        },
+        "1142|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.6975
+        },
+        "1141|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 50.91,
+          "active_students": 69,
+          "overall_pass_rate": 0.6975
+        },
+        "1131|all|fail": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 10.22,
+          "active_students": 37,
+          "overall_pass_rate": 0.6975
+        },
+        "1131|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 43.94,
+          "active_students": 79,
+          "overall_pass_rate": 0.6975
+        },
+        "1131|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 42.37,
+          "active_students": 73,
+          "overall_pass_rate": 0.6975
+        },
+        "1142|all|all": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 17.85,
+          "active_students": 93,
+          "overall_pass_rate": 0.6975
+        },
+        "1142|all|pass": {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.6975
+        }
+      },
+      "overall_pass_rate": 0.6975,
+      "avg_final_score": 0.6975
     },
     {
       "week": 8,
       "title": "第8週 練習題庫",
-      "pass_group_avg_attempts": 81.61,
-      "fail_group_avg_attempts": 50.9,
-      "overall_pass_rate": 0.7389
+      "pass_group_avg_attempts": 54.32,
+      "fail_group_avg_attempts": 20.8,
+      "active_students": 242,
+      "segments": {
+        "1111|all|all": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 74.39,
+          "active_students": 70,
+          "overall_pass_rate": 0.7389
+        },
+        "1141|all|all": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 51.0,
+          "active_students": 84,
+          "overall_pass_rate": 0.7389
+        },
+        "1111|all|pass": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 72.23,
+          "active_students": 62,
+          "overall_pass_rate": 0.7389
+        },
+        "1112|all|fail": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 9.68,
+          "active_students": 40,
+          "overall_pass_rate": 0.7389
+        },
+        "1141|all|pass": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 53.86,
+          "active_students": 69,
+          "overall_pass_rate": 0.7389
+        },
+        "1142|all|fail": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7389
+        },
+        "1142|all|pass": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7389
+        },
+        "1112|all|all": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 21.18,
+          "active_students": 80,
+          "overall_pass_rate": 0.7389
+        },
+        "all|all|fail": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 15.36,
+          "active_students": 170,
+          "overall_pass_rate": 0.7389
+        },
+        "1112|all|pass": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 17.37,
+          "active_students": 75,
+          "overall_pass_rate": 0.7389
+        },
+        "1132|all|all": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 23.98,
+          "active_students": 87,
+          "overall_pass_rate": 0.7389
+        },
+        "1132|all|fail": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 14.01,
+          "active_students": 69,
+          "overall_pass_rate": 0.7389
+        },
+        "1142|all|all": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 18.82,
+          "active_students": 93,
+          "overall_pass_rate": 0.7389
+        },
+        "all|all|all": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 62.07,
+          "active_students": 242,
+          "overall_pass_rate": 0.7389
+        },
+        "1111|all|fail": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 16.02,
+          "active_students": 43,
+          "overall_pass_rate": 0.7389
+        },
+        "1141|all|fail": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 9.47,
+          "active_students": 60,
+          "overall_pass_rate": 0.7389
+        },
+        "all|all|pass": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 52.3,
+          "active_students": 203,
+          "overall_pass_rate": 0.7389
+        },
+        "1132|all|pass": {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 16.7,
+          "active_students": 67,
+          "overall_pass_rate": 0.7389
+        }
+      },
+      "overall_pass_rate": 0.7389,
+      "avg_final_score": 0.7389
     },
     {
       "week": 9,
-      "title": "第9週 練習題庫",
-      "pass_group_avg_attempts": 73.0,
-      "fail_group_avg_attempts": 55.45,
-      "overall_pass_rate": 0.8036
+      "title": "第9週 期中考",
+      "is_exam_week": true,
+      "exam_type": "midterm"
     },
     {
       "week": 10,
       "title": "第10週 練習題庫",
-      "pass_group_avg_attempts": 106.09,
-      "fail_group_avg_attempts": 98.43,
-      "overall_pass_rate": 0.7987
+      "pass_group_avg_attempts": 92.67,
+      "fail_group_avg_attempts": 19.66,
+      "active_students": 284,
+      "segments": {
+        "1112|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 8.75,
+          "active_students": 40,
+          "overall_pass_rate": 0.7987
+        },
+        "1121|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 11.35,
+          "active_students": 54,
+          "overall_pass_rate": 0.7987
+        },
+        "1112|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 20.24,
+          "active_students": 79,
+          "overall_pass_rate": 0.7987
+        },
+        "1112|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 16.65,
+          "active_students": 75,
+          "overall_pass_rate": 0.7987
+        },
+        "1121|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 33.92,
+          "active_students": 75,
+          "overall_pass_rate": 0.7987
+        },
+        "1121|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 37.58,
+          "active_students": 84,
+          "overall_pass_rate": 0.7987
+        },
+        "all|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 23.05,
+          "active_students": 215,
+          "overall_pass_rate": 0.7987
+        },
+        "all|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 101.1,
+          "active_students": 284,
+          "overall_pass_rate": 0.7987
+        },
+        "all|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 88.92,
+          "active_students": 266,
+          "overall_pass_rate": 0.7987
+        },
+        "1132|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 15.6,
+          "active_students": 68,
+          "overall_pass_rate": 0.7987
+        },
+        "1122|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 15.3,
+          "active_students": 43,
+          "overall_pass_rate": 0.7987
+        },
+        "1132|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 26.36,
+          "active_students": 86,
+          "overall_pass_rate": 0.7987
+        },
+        "1111|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 22.19,
+          "active_students": 43,
+          "overall_pass_rate": 0.7987
+        },
+        "1141|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 12.4,
+          "active_students": 57,
+          "overall_pass_rate": 0.7987
+        },
+        "1122|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 31.37,
+          "active_students": 89,
+          "overall_pass_rate": 0.7987
+        },
+        "1132|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 18.0,
+          "active_students": 67,
+          "overall_pass_rate": 0.7987
+        },
+        "1111|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 103.35,
+          "active_students": 69,
+          "overall_pass_rate": 0.7987
+        },
+        "1122|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 26.68,
+          "active_students": 80,
+          "overall_pass_rate": 0.7987
+        },
+        "1141|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 57.74,
+          "active_students": 81,
+          "overall_pass_rate": 0.7987
+        },
+        "1111|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 99.56,
+          "active_students": 62,
+          "overall_pass_rate": 0.7987
+        },
+        "1142|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 0.0,
+          "active_students": 0,
+          "overall_pass_rate": 0.7987
+        },
+        "1141|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 57.54,
+          "active_students": 69,
+          "overall_pass_rate": 0.7987
+        },
+        "1131|all|fail": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 16.54,
+          "active_students": 37,
+          "overall_pass_rate": 0.7987
+        },
+        "1131|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 88.48,
+          "active_students": 79,
+          "overall_pass_rate": 0.7987
+        },
+        "1131|all|pass": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 87.37,
+          "active_students": 73,
+          "overall_pass_rate": 0.7987
+        },
+        "1142|all|all": {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 4.0,
+          "active_students": 25,
+          "overall_pass_rate": 0.7987
+        }
+      },
+      "overall_pass_rate": 0.7987,
+      "avg_final_score": 0.7987
     },
     {
       "week": 11,
       "title": "第11週 練習題庫",
-      "pass_group_avg_attempts": 127.49,
-      "fail_group_avg_attempts": 85.93,
-      "overall_pass_rate": 0.8061
+      "pass_group_avg_attempts": 90.59,
+      "fail_group_avg_attempts": 20.46,
+      "active_students": 280,
+      "segments": {
+        "1112|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 9.35,
+          "active_students": 40,
+          "overall_pass_rate": 0.8061
+        },
+        "1121|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 16.72,
+          "active_students": 54,
+          "overall_pass_rate": 0.8061
+        },
+        "1112|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 19.05,
+          "active_students": 79,
+          "overall_pass_rate": 0.8061
+        },
+        "1112|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 15.08,
+          "active_students": 75,
+          "overall_pass_rate": 0.8061
+        },
+        "1121|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 52.08,
+          "active_students": 75,
+          "overall_pass_rate": 0.8061
+        },
+        "1121|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 57.25,
+          "active_students": 84,
+          "overall_pass_rate": 0.8061
+        },
+        "all|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 23.73,
+          "active_students": 215,
+          "overall_pass_rate": 0.8061
+        },
+        "all|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 100.63,
+          "active_students": 280,
+          "overall_pass_rate": 0.8061
+        },
+        "all|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 86.75,
+          "active_students": 266,
+          "overall_pass_rate": 0.8061
+        },
+        "1132|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 19.87,
+          "active_students": 68,
+          "overall_pass_rate": 0.8061
+        },
+        "1122|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 10.4,
+          "active_students": 43,
+          "overall_pass_rate": 0.8061
+        },
+        "1132|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 35.57,
+          "active_students": 86,
+          "overall_pass_rate": 0.8061
+        },
+        "1111|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 17.14,
+          "active_students": 43,
+          "overall_pass_rate": 0.8061
+        },
+        "1141|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 16.33,
+          "active_students": 57,
+          "overall_pass_rate": 0.8061
+        },
+        "1122|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 23.48,
+          "active_students": 89,
+          "overall_pass_rate": 0.8061
+        },
+        "1132|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 25.49,
+          "active_students": 67,
+          "overall_pass_rate": 0.8061
+        },
+        "1111|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 78.71,
+          "active_students": 69,
+          "overall_pass_rate": 0.8061
+        },
+        "1122|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 20.54,
+          "active_students": 80,
+          "overall_pass_rate": 0.8061
+        },
+        "1141|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 88.35,
+          "active_students": 81,
+          "overall_pass_rate": 0.8061
+        },
+        "1111|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 75.71,
+          "active_students": 62,
+          "overall_pass_rate": 0.8061
+        },
+        "1141|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 90.22,
+          "active_students": 69,
+          "overall_pass_rate": 0.8061
+        },
+        "1131|all|fail": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 9.68,
+          "active_students": 37,
+          "overall_pass_rate": 0.8061
+        },
+        "1131|all|all": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 52.23,
+          "active_students": 79,
+          "overall_pass_rate": 0.8061
+        },
+        "1131|all|pass": {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 51.62,
+          "active_students": 73,
+          "overall_pass_rate": 0.8061
+        }
+      },
+      "overall_pass_rate": 0.8061,
+      "avg_final_score": 0.8061
     },
     {
       "week": 12,
       "title": "第12週 練習題庫",
-      "pass_group_avg_attempts": 96.76,
-      "fail_group_avg_attempts": 94.66,
-      "overall_pass_rate": 0.8103
+      "pass_group_avg_attempts": 88.05,
+      "fail_group_avg_attempts": 16.51,
+      "active_students": 280,
+      "segments": {
+        "1112|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 9.82,
+          "active_students": 40,
+          "overall_pass_rate": 0.8103
+        },
+        "1121|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 9.83,
+          "active_students": 54,
+          "overall_pass_rate": 0.8103
+        },
+        "1112|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 26.22,
+          "active_students": 79,
+          "overall_pass_rate": 0.8103
+        },
+        "1112|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 22.37,
+          "active_students": 75,
+          "overall_pass_rate": 0.8103
+        },
+        "1121|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 33.84,
+          "active_students": 75,
+          "overall_pass_rate": 0.8103
+        },
+        "1121|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 36.54,
+          "active_students": 84,
+          "overall_pass_rate": 0.8103
+        },
+        "all|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 19.97,
+          "active_students": 215,
+          "overall_pass_rate": 0.8103
+        },
+        "all|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 95.4,
+          "active_students": 280,
+          "overall_pass_rate": 0.8103
+        },
+        "all|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 84.28,
+          "active_students": 266,
+          "overall_pass_rate": 0.8103
+        },
+        "1132|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 13.72,
+          "active_students": 68,
+          "overall_pass_rate": 0.8103
+        },
+        "1122|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 11.51,
+          "active_students": 43,
+          "overall_pass_rate": 0.8103
+        },
+        "1132|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 23.77,
+          "active_students": 86,
+          "overall_pass_rate": 0.8103
+        },
+        "1111|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 21.4,
+          "active_students": 43,
+          "overall_pass_rate": 0.8103
+        },
+        "1141|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 11.28,
+          "active_students": 57,
+          "overall_pass_rate": 0.8103
+        },
+        "1122|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 25.34,
+          "active_students": 89,
+          "overall_pass_rate": 0.8103
+        },
+        "1132|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 16.58,
+          "active_students": 67,
+          "overall_pass_rate": 0.8103
+        },
+        "1111|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 124.68,
+          "active_students": 69,
+          "overall_pass_rate": 0.8103
+        },
+        "1122|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 22.0,
+          "active_students": 80,
+          "overall_pass_rate": 0.8103
+        },
+        "1141|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 55.95,
+          "active_students": 81,
+          "overall_pass_rate": 0.8103
+        },
+        "1111|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 123.92,
+          "active_students": 62,
+          "overall_pass_rate": 0.8103
+        },
+        "1141|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 56.36,
+          "active_students": 69,
+          "overall_pass_rate": 0.8103
+        },
+        "1131|all|fail": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 10.24,
+          "active_students": 37,
+          "overall_pass_rate": 0.8103
+        },
+        "1131|all|all": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 52.38,
+          "active_students": 79,
+          "overall_pass_rate": 0.8103
+        },
+        "1131|all|pass": {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 51.49,
+          "active_students": 73,
+          "overall_pass_rate": 0.8103
+        }
+      },
+      "overall_pass_rate": 0.8103,
+      "avg_final_score": 0.8103
     },
     {
       "week": 13,
       "title": "第13週 練習題庫",
-      "pass_group_avg_attempts": 90.76,
-      "fail_group_avg_attempts": 70.81,
-      "overall_pass_rate": 0.8447
+      "pass_group_avg_attempts": 71.03,
+      "fail_group_avg_attempts": 14.62,
+      "active_students": 280,
+      "segments": {
+        "1112|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 8.22,
+          "active_students": 40,
+          "overall_pass_rate": 0.8447
+        },
+        "1121|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 10.61,
+          "active_students": 54,
+          "overall_pass_rate": 0.8447
+        },
+        "1112|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 17.19,
+          "active_students": 79,
+          "overall_pass_rate": 0.8447
+        },
+        "1112|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 13.72,
+          "active_students": 75,
+          "overall_pass_rate": 0.8447
+        },
+        "1121|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 35.39,
+          "active_students": 75,
+          "overall_pass_rate": 0.8447
+        },
+        "1121|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 38.42,
+          "active_students": 84,
+          "overall_pass_rate": 0.8447
+        },
+        "all|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 17.25,
+          "active_students": 215,
+          "overall_pass_rate": 0.8447
+        },
+        "all|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 77.86,
+          "active_students": 280,
+          "overall_pass_rate": 0.8447
+        },
+        "all|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 68.02,
+          "active_students": 266,
+          "overall_pass_rate": 0.8447
+        },
+        "1132|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 13.76,
+          "active_students": 68,
+          "overall_pass_rate": 0.8447
+        },
+        "1122|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 10.84,
+          "active_students": 43,
+          "overall_pass_rate": 0.8447
+        },
+        "1132|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 23.91,
+          "active_students": 86,
+          "overall_pass_rate": 0.8447
+        },
+        "1111|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 10.91,
+          "active_students": 43,
+          "overall_pass_rate": 0.8447
+        },
+        "1141|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 10.18,
+          "active_students": 57,
+          "overall_pass_rate": 0.8447
+        },
+        "1122|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 25.3,
+          "active_students": 89,
+          "overall_pass_rate": 0.8447
+        },
+        "1132|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 16.72,
+          "active_students": 67,
+          "overall_pass_rate": 0.8447
+        },
+        "1111|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 59.86,
+          "active_students": 69,
+          "overall_pass_rate": 0.8447
+        },
+        "1122|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 22.32,
+          "active_students": 80,
+          "overall_pass_rate": 0.8447
+        },
+        "1141|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 57.31,
+          "active_students": 81,
+          "overall_pass_rate": 0.8447
+        },
+        "1111|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 59.05,
+          "active_students": 62,
+          "overall_pass_rate": 0.8447
+        },
+        "1141|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 58.87,
+          "active_students": 69,
+          "overall_pass_rate": 0.8447
+        },
+        "1131|all|fail": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 9.59,
+          "active_students": 37,
+          "overall_pass_rate": 0.8447
+        },
+        "1131|all|all": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 52.35,
+          "active_students": 79,
+          "overall_pass_rate": 0.8447
+        },
+        "1131|all|pass": {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 51.79,
+          "active_students": 73,
+          "overall_pass_rate": 0.8447
+        }
+      },
+      "overall_pass_rate": 0.8447,
+      "avg_final_score": 0.8447
     },
     {
       "week": 14,
       "title": "第14週 練習題庫",
-      "pass_group_avg_attempts": 82.94,
-      "fail_group_avg_attempts": 61.63,
-      "overall_pass_rate": 0.8471
+      "pass_group_avg_attempts": 62.97,
+      "fail_group_avg_attempts": 13.52,
+      "active_students": 270,
+      "segments": {
+        "1112|all|fail": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 7.97,
+          "active_students": 40,
+          "overall_pass_rate": 0.8471
+        },
+        "1121|all|fail": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 10.09,
+          "active_students": 54,
+          "overall_pass_rate": 0.8471
+        },
+        "1112|all|all": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 18.08,
+          "active_students": 79,
+          "overall_pass_rate": 0.8471
+        },
+        "1112|all|pass": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 14.79,
+          "active_students": 75,
+          "overall_pass_rate": 0.8471
+        },
+        "1121|all|pass": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 35.67,
+          "active_students": 75,
+          "overall_pass_rate": 0.8471
+        },
+        "1121|all|all": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 38.33,
+          "active_students": 84,
+          "overall_pass_rate": 0.8471
+        },
+        "all|all|fail": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 15.42,
+          "active_students": 210,
+          "overall_pass_rate": 0.8471
+        },
+        "all|all|all": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 69.44,
+          "active_students": 270,
+          "overall_pass_rate": 0.8471
+        },
+        "all|all|pass": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 60.82,
+          "active_students": 255,
+          "overall_pass_rate": 0.8471
+        },
+        "1132|all|fail": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 14.75,
+          "active_students": 68,
+          "overall_pass_rate": 0.8471
+        },
+        "1132|all|all": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 25.13,
+          "active_students": 86,
+          "overall_pass_rate": 0.8471
+        },
+        "1111|all|fail": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 11.21,
+          "active_students": 43,
+          "overall_pass_rate": 0.8471
+        },
+        "1141|all|fail": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 10.7,
+          "active_students": 57,
+          "overall_pass_rate": 0.8471
+        },
+        "1132|all|pass": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 17.28,
+          "active_students": 67,
+          "overall_pass_rate": 0.8471
+        },
+        "1111|all|all": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 62.78,
+          "active_students": 69,
+          "overall_pass_rate": 0.8471
+        },
+        "1141|all|all": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 60.27,
+          "active_students": 81,
+          "overall_pass_rate": 0.8471
+        },
+        "1111|all|pass": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 62.1,
+          "active_students": 62,
+          "overall_pass_rate": 0.8471
+        },
+        "1141|all|pass": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 61.91,
+          "active_students": 69,
+          "overall_pass_rate": 0.8471
+        },
+        "1131|all|fail": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 7.57,
+          "active_students": 37,
+          "overall_pass_rate": 0.8471
+        },
+        "1131|all|all": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 34.51,
+          "active_students": 79,
+          "overall_pass_rate": 0.8471
+        },
+        "1131|all|pass": {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 33.51,
+          "active_students": 73,
+          "overall_pass_rate": 0.8471
+        }
+      },
+      "overall_pass_rate": 0.8471,
+      "avg_final_score": 0.8471
     },
     {
       "week": 15,
       "title": "第15週 練習題庫",
-      "pass_group_avg_attempts": 67.61,
-      "fail_group_avg_attempts": 71.89,
-      "overall_pass_rate": 0.8161
+      "pass_group_avg_attempts": 64.71,
+      "fail_group_avg_attempts": 12.38,
+      "active_students": 270,
+      "segments": {
+        "1112|all|fail": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 7.45,
+          "active_students": 40,
+          "overall_pass_rate": 0.8161
+        },
+        "1121|all|fail": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 7.74,
+          "active_students": 54,
+          "overall_pass_rate": 0.8161
+        },
+        "1112|all|all": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 21.52,
+          "active_students": 79,
+          "overall_pass_rate": 0.8161
+        },
+        "1112|all|pass": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 18.69,
+          "active_students": 75,
+          "overall_pass_rate": 0.8161
+        },
+        "1121|all|pass": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 27.76,
+          "active_students": 75,
+          "overall_pass_rate": 0.8161
+        },
+        "1121|all|all": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 29.76,
+          "active_students": 84,
+          "overall_pass_rate": 0.8161
+        },
+        "all|all|fail": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 13.89,
+          "active_students": 210,
+          "overall_pass_rate": 0.8161
+        },
+        "all|all|all": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 70.32,
+          "active_students": 270,
+          "overall_pass_rate": 0.8161
+        },
+        "all|all|pass": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 63.02,
+          "active_students": 255,
+          "overall_pass_rate": 0.8161
+        },
+        "1132|all|fail": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 10.74,
+          "active_students": 68,
+          "overall_pass_rate": 0.8161
+        },
+        "1132|all|all": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 19.86,
+          "active_students": 86,
+          "overall_pass_rate": 0.8161
+        },
+        "1111|all|fail": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 17.19,
+          "active_students": 43,
+          "overall_pass_rate": 0.8161
+        },
+        "1141|all|fail": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 7.79,
+          "active_students": 57,
+          "overall_pass_rate": 0.8161
+        },
+        "1132|all|pass": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 14.6,
+          "active_students": 67,
+          "overall_pass_rate": 0.8161
+        },
+        "1111|all|all": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 98.86,
+          "active_students": 69,
+          "overall_pass_rate": 0.8161
+        },
+        "1141|all|all": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 40.75,
+          "active_students": 81,
+          "overall_pass_rate": 0.8161
+        },
+        "1111|all|pass": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 98.1,
+          "active_students": 62,
+          "overall_pass_rate": 0.8161
+        },
+        "1141|all|pass": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 41.41,
+          "active_students": 69,
+          "overall_pass_rate": 0.8161
+        },
+        "1131|all|fail": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 7.78,
+          "active_students": 37,
+          "overall_pass_rate": 0.8161
+        },
+        "1131|all|all": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 37.42,
+          "active_students": 79,
+          "overall_pass_rate": 0.8161
+        },
+        "1131|all|pass": {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 36.55,
+          "active_students": 73,
+          "overall_pass_rate": 0.8161
+        }
+      },
+      "overall_pass_rate": 0.8161,
+      "avg_final_score": 0.8161
     },
     {
       "week": 16,
       "title": "第16週 練習題庫",
-      "pass_group_avg_attempts": 51.38,
-      "fail_group_avg_attempts": 37.5,
-      "overall_pass_rate": 0.8309
+      "pass_group_avg_attempts": 40.13,
+      "fail_group_avg_attempts": 9.5,
+      "active_students": 229,
+      "segments": {
+        "1111|all|all": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 53.75,
+          "active_students": 69,
+          "overall_pass_rate": 0.8309
+        },
+        "1141|all|all": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 43.54,
+          "active_students": 81,
+          "overall_pass_rate": 0.8309
+        },
+        "1111|all|pass": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 52.52,
+          "active_students": 62,
+          "overall_pass_rate": 0.8309
+        },
+        "1112|all|fail": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 8.1,
+          "active_students": 40,
+          "overall_pass_rate": 0.8309
+        },
+        "1141|all|pass": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 44.1,
+          "active_students": 69,
+          "overall_pass_rate": 0.8309
+        },
+        "1112|all|all": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 15.96,
+          "active_students": 79,
+          "overall_pass_rate": 0.8309
+        },
+        "all|all|fail": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 10.95,
+          "active_students": 168,
+          "overall_pass_rate": 0.8309
+        },
+        "1112|all|pass": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 12.49,
+          "active_students": 75,
+          "overall_pass_rate": 0.8309
+        },
+        "1132|all|all": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 14.93,
+          "active_students": 86,
+          "overall_pass_rate": 0.8309
+        },
+        "1132|all|fail": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 8.51,
+          "active_students": 68,
+          "overall_pass_rate": 0.8309
+        },
+        "all|all|all": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 42.71,
+          "active_students": 229,
+          "overall_pass_rate": 0.8309
+        },
+        "1111|all|fail": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 10.53,
+          "active_students": 43,
+          "overall_pass_rate": 0.8309
+        },
+        "1141|all|fail": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 8.49,
+          "active_students": 57,
+          "overall_pass_rate": 0.8309
+        },
+        "all|all|pass": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 39.12,
+          "active_students": 203,
+          "overall_pass_rate": 0.8309
+        },
+        "1132|all|pass": {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 10.52,
+          "active_students": 67,
+          "overall_pass_rate": 0.8309
+        }
+      },
+      "overall_pass_rate": 0.8309,
+      "avg_final_score": 0.8309
     },
     {
       "week": 17,
       "title": "第17週 練習題庫",
-      "pass_group_avg_attempts": 141.31,
-      "fail_group_avg_attempts": 51.47,
-      "overall_pass_rate": 0.7854
+      "pass_group_avg_attempts": 77.7,
+      "fail_group_avg_attempts": 22.19,
+      "active_students": 229,
+      "segments": {
+        "1111|all|all": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 56.88,
+          "active_students": 69,
+          "overall_pass_rate": 0.7854
+        },
+        "1141|all|all": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 129.67,
+          "active_students": 81,
+          "overall_pass_rate": 0.7854
+        },
+        "1111|all|pass": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 55.53,
+          "active_students": 62,
+          "overall_pass_rate": 0.7854
+        },
+        "1112|all|fail": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 8.88,
+          "active_students": 40,
+          "overall_pass_rate": 0.7854
+        },
+        "1141|all|pass": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 134.42,
+          "active_students": 69,
+          "overall_pass_rate": 0.7854
+        },
+        "1112|all|all": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 15.91,
+          "active_students": 79,
+          "overall_pass_rate": 0.7854
+        },
+        "all|all|fail": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 23.07,
+          "active_students": 168,
+          "overall_pass_rate": 0.7854
+        },
+        "1112|all|pass": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 12.03,
+          "active_students": 75,
+          "overall_pass_rate": 0.7854
+        },
+        "1132|all|all": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 44.51,
+          "active_students": 86,
+          "overall_pass_rate": 0.7854
+        },
+        "1132|all|fail": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 26.63,
+          "active_students": 68,
+          "overall_pass_rate": 0.7854
+        },
+        "all|all|all": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 85.21,
+          "active_students": 229,
+          "overall_pass_rate": 0.7854
+        },
+        "1111|all|fail": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 11.21,
+          "active_students": 43,
+          "overall_pass_rate": 0.7854
+        },
+        "1141|all|fail": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 21.54,
+          "active_students": 57,
+          "overall_pass_rate": 0.7854
+        },
+        "all|all|pass": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 77.03,
+          "active_students": 203,
+          "overall_pass_rate": 0.7854
+        },
+        "1132|all|pass": {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 30.1,
+          "active_students": 67,
+          "overall_pass_rate": 0.7854
+        }
+      },
+      "overall_pass_rate": 0.7854,
+      "avg_final_score": 0.7854
+    },
+    {
+      "week": 18,
+      "title": "第18週 期末考",
+      "is_exam_week": true,
+      "exam_type": "final"
     }
-  ]
+  ],
+  "by_semester": {
+    "1112": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 25.4,
+          "active_students": 80,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 27.79,
+          "active_students": 80,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 25.39,
+          "active_students": 80,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 19.16,
+          "active_students": 80,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 19.4,
+          "active_students": 80,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 20.76,
+          "active_students": 80,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 16.32,
+          "active_students": 80,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 21.18,
+          "active_students": 80,
+          "overall_pass_rate": 0.7389
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 20.24,
+          "active_students": 79,
+          "overall_pass_rate": 0.7987
+        },
+        {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 19.05,
+          "active_students": 79,
+          "overall_pass_rate": 0.8061
+        },
+        {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 26.22,
+          "active_students": 79,
+          "overall_pass_rate": 0.8103
+        },
+        {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 17.19,
+          "active_students": 79,
+          "overall_pass_rate": 0.8447
+        },
+        {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 18.08,
+          "active_students": 79,
+          "overall_pass_rate": 0.8471
+        },
+        {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 21.52,
+          "active_students": 79,
+          "overall_pass_rate": 0.8161
+        },
+        {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 15.96,
+          "active_students": 79,
+          "overall_pass_rate": 0.8309
+        },
+        {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 15.91,
+          "active_students": 79,
+          "overall_pass_rate": 0.7854
+        }
+      ]
+    },
+    "1121": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 63.08,
+          "active_students": 86,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 32.34,
+          "active_students": 86,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 53.82,
+          "active_students": 85,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 39.42,
+          "active_students": 85,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 49.09,
+          "active_students": 85,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 47.67,
+          "active_students": 85,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 37.66,
+          "active_students": 85,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 37.58,
+          "active_students": 84,
+          "overall_pass_rate": 0.7987
+        },
+        {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 57.25,
+          "active_students": 84,
+          "overall_pass_rate": 0.8061
+        },
+        {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 36.54,
+          "active_students": 84,
+          "overall_pass_rate": 0.8103
+        },
+        {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 38.42,
+          "active_students": 84,
+          "overall_pass_rate": 0.8447
+        },
+        {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 38.33,
+          "active_students": 84,
+          "overall_pass_rate": 0.8471
+        },
+        {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 29.76,
+          "active_students": 84,
+          "overall_pass_rate": 0.8161
+        }
+      ]
+    },
+    "1132": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 30.15,
+          "active_students": 87,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 26.02,
+          "active_students": 87,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 27.92,
+          "active_students": 87,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 15.07,
+          "active_students": 87,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 26.83,
+          "active_students": 87,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 23.24,
+          "active_students": 87,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 20.21,
+          "active_students": 87,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 23.98,
+          "active_students": 87,
+          "overall_pass_rate": 0.7389
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 26.36,
+          "active_students": 86,
+          "overall_pass_rate": 0.7987
+        },
+        {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 35.57,
+          "active_students": 86,
+          "overall_pass_rate": 0.8061
+        },
+        {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 23.77,
+          "active_students": 86,
+          "overall_pass_rate": 0.8103
+        },
+        {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 23.91,
+          "active_students": 86,
+          "overall_pass_rate": 0.8447
+        },
+        {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 25.13,
+          "active_students": 86,
+          "overall_pass_rate": 0.8471
+        },
+        {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 19.86,
+          "active_students": 86,
+          "overall_pass_rate": 0.8161
+        },
+        {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 14.93,
+          "active_students": 86,
+          "overall_pass_rate": 0.8309
+        },
+        {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 44.51,
+          "active_students": 86,
+          "overall_pass_rate": 0.7854
+        }
+      ]
+    },
+    "1122": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 28.63,
+          "active_students": 89,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 27.71,
+          "active_students": 89,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 20.12,
+          "active_students": 89,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 29.83,
+          "active_students": 89,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 29.3,
+          "active_students": 89,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 26.93,
+          "active_students": 89,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 20.08,
+          "active_students": 88,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 31.37,
+          "active_students": 89,
+          "overall_pass_rate": 0.7987
+        },
+        {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 23.48,
+          "active_students": 89,
+          "overall_pass_rate": 0.8061
+        },
+        {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 25.34,
+          "active_students": 89,
+          "overall_pass_rate": 0.8103
+        },
+        {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 25.3,
+          "active_students": 89,
+          "overall_pass_rate": 0.8447
+        }
+      ]
+    },
+    "1111": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 109.1,
+          "active_students": 70,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 113.43,
+          "active_students": 70,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 102.03,
+          "active_students": 70,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 73.43,
+          "active_students": 70,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 77.11,
+          "active_students": 70,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 81.83,
+          "active_students": 70,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 64.5,
+          "active_students": 70,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 74.39,
+          "active_students": 70,
+          "overall_pass_rate": 0.7389
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 103.35,
+          "active_students": 69,
+          "overall_pass_rate": 0.7987
+        },
+        {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 78.71,
+          "active_students": 69,
+          "overall_pass_rate": 0.8061
+        },
+        {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 124.68,
+          "active_students": 69,
+          "overall_pass_rate": 0.8103
+        },
+        {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 59.86,
+          "active_students": 69,
+          "overall_pass_rate": 0.8447
+        },
+        {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 62.78,
+          "active_students": 69,
+          "overall_pass_rate": 0.8471
+        },
+        {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 98.86,
+          "active_students": 69,
+          "overall_pass_rate": 0.8161
+        },
+        {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 53.75,
+          "active_students": 69,
+          "overall_pass_rate": 0.8309
+        },
+        {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 56.88,
+          "active_students": 69,
+          "overall_pass_rate": 0.7854
+        }
+      ]
+    },
+    "1141": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 64.17,
+          "active_students": 84,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 53.23,
+          "active_students": 84,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 61.05,
+          "active_students": 84,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 29.81,
+          "active_students": 84,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 57.74,
+          "active_students": 84,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 49.05,
+          "active_students": 84,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 47.87,
+          "active_students": 84,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 51.0,
+          "active_students": 84,
+          "overall_pass_rate": 0.7389
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 57.74,
+          "active_students": 81,
+          "overall_pass_rate": 0.7987
+        },
+        {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 88.35,
+          "active_students": 81,
+          "overall_pass_rate": 0.8061
+        },
+        {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 55.95,
+          "active_students": 81,
+          "overall_pass_rate": 0.8103
+        },
+        {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 57.31,
+          "active_students": 81,
+          "overall_pass_rate": 0.8447
+        },
+        {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 60.27,
+          "active_students": 81,
+          "overall_pass_rate": 0.8471
+        },
+        {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 40.75,
+          "active_students": 81,
+          "overall_pass_rate": 0.8161
+        },
+        {
+          "week": 16,
+          "title": "第16週 練習題庫",
+          "avg_attempts": 43.54,
+          "active_students": 81,
+          "overall_pass_rate": 0.8309
+        },
+        {
+          "week": 17,
+          "title": "第17週 練習題庫",
+          "avg_attempts": 129.67,
+          "active_students": 81,
+          "overall_pass_rate": 0.7854
+        }
+      ]
+    },
+    "1131": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 62.01,
+          "active_students": 79,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 50.43,
+          "active_students": 79,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 56.32,
+          "active_students": 79,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 28.38,
+          "active_students": 79,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 56.68,
+          "active_students": 79,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 46.56,
+          "active_students": 79,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 43.94,
+          "active_students": 79,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 88.48,
+          "active_students": 79,
+          "overall_pass_rate": 0.7987
+        },
+        {
+          "week": 11,
+          "title": "第11週 練習題庫",
+          "avg_attempts": 52.23,
+          "active_students": 79,
+          "overall_pass_rate": 0.8061
+        },
+        {
+          "week": 12,
+          "title": "第12週 練習題庫",
+          "avg_attempts": 52.38,
+          "active_students": 79,
+          "overall_pass_rate": 0.8103
+        },
+        {
+          "week": 13,
+          "title": "第13週 練習題庫",
+          "avg_attempts": 52.35,
+          "active_students": 79,
+          "overall_pass_rate": 0.8447
+        },
+        {
+          "week": 14,
+          "title": "第14週 練習題庫",
+          "avg_attempts": 34.51,
+          "active_students": 79,
+          "overall_pass_rate": 0.8471
+        },
+        {
+          "week": 15,
+          "title": "第15週 練習題庫",
+          "avg_attempts": 37.42,
+          "active_students": 79,
+          "overall_pass_rate": 0.8161
+        }
+      ]
+    },
+    "1142": {
+      "weeks": [
+        {
+          "week": 1,
+          "title": "第1週 練習題庫",
+          "avg_attempts": 27.44,
+          "active_students": 94,
+          "overall_pass_rate": 0.7637
+        },
+        {
+          "week": 2,
+          "title": "第2週 練習題庫",
+          "avg_attempts": 23.15,
+          "active_students": 93,
+          "overall_pass_rate": 0.8124
+        },
+        {
+          "week": 3,
+          "title": "第3週 練習題庫",
+          "avg_attempts": 22.76,
+          "active_students": 93,
+          "overall_pass_rate": 0.7647
+        },
+        {
+          "week": 4,
+          "title": "第4週 練習題庫",
+          "avg_attempts": 14.04,
+          "active_students": 93,
+          "overall_pass_rate": 0.8106
+        },
+        {
+          "week": 5,
+          "title": "第5週 練習題庫",
+          "avg_attempts": 22.47,
+          "active_students": 93,
+          "overall_pass_rate": 0.7203
+        },
+        {
+          "week": 6,
+          "title": "第6週 練習題庫",
+          "avg_attempts": 18.99,
+          "active_students": 93,
+          "overall_pass_rate": 0.707
+        },
+        {
+          "week": 7,
+          "title": "第7週 練習題庫",
+          "avg_attempts": 17.85,
+          "active_students": 93,
+          "overall_pass_rate": 0.6975
+        },
+        {
+          "week": 8,
+          "title": "第8週 練習題庫",
+          "avg_attempts": 18.82,
+          "active_students": 93,
+          "overall_pass_rate": 0.7389
+        },
+        {
+          "week": 10,
+          "title": "第10週 練習題庫",
+          "avg_attempts": 4.0,
+          "active_students": 25,
+          "overall_pass_rate": 0.7987
+        }
+      ]
+    }
+  }
 }
