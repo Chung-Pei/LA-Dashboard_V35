@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<!--
+      Content-Security-Policy:
+      - script-src 'self'              : no inline scripts, no eval
+      - style-src 'self' 'unsafe-inline' : Chart.js requires inline styles; cannot remove without major refactor
+      - connect-src 'self'             : all fetch() calls use relative paths only
+      - img-src data: blob:            : Chart.js exports use data: URIs
+      - worker-src blob:               : Service Worker update flow
+      NOTE: frame-ancestors (anti-clickjacking) only works as an HTTP response header.
+            Set "Content-Security-Policy: frame-ancestors 'self'" or
+            "X-Frame-Options: SAMEORIGIN" at the server/CDN layer.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' data:; worker-src 'self' blob:;">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>學習數據分析儀表板 · Learning Analytics</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="./manifest.json">
+
+<!-- iOS PWA 必要設定 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LA DASH">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- iOS Home Screen Icons -->
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="./icons/icon-167.png">
+<link rel="apple-touch-icon" sizes="120x120" href="./icons/icon-120.png">
+
+<!-- Android / Chrome theme -->
+<meta name="theme-color" content="#0b0d14">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- PWACompat：自動產生所有 Splash Screen，免手動維護 -->
+
+<script defer src="js/vendor/pwacompat.min.js"></script>
+<script src="js/vendor/chart.umd.min.js"></script>
+<!-- Phase 4：用於時序折線圖期中考垂直標注線（@3.0.1 與 Chart.js 4.4.x 相容） -->
+<script src="js/vendor/chartjs-plugin-annotation.min.js"></script>
+<style>
+/* Embedded font fallbacks for offline/sandboxed use */
+
+:root {
+  --bg:        #0b0d14;
+  --surface:   #13161f;
+  --surface2:  #1c2030;
+  --surface3:  #242840;
+  --border:    #2a2f45;
+  --border2:   #353c58;
+  --accent:    #4f8ef7;
+  --accent2:   #64d4a8;
+  --accent3:   #f7a44f;
+  --accent4:   #e06c8c;
+  --text:      #dde3f5;
+  --text-dim:  #6b748f;
+  --text-mid:  #9aa0b8;
+  --red:       #f07070;
+  --yellow:    #f0c85b;
+  --blue:      #5b8af0;
+  --gray:      #6b748f;
+  --green:     #64d4a8;
+  --radius:    10px;
+  --tab-h:     52px;
+  --header-h:  58px;
+  /* 補充：dark mode 下 card 背景 */
+  --card-bg2:  #1c2030;
+  --card-bg:   #13161f;
+}
+
+/* ── 淺色模式 Light Mode ── */
+body.light {
+  --bg:        #f0f2f8;
+  --surface:   #ffffff;
+  --surface2:  #e8eaf2;
+  --surface3:  #dde0ee;
+  --border:    #c8cce0;
+  --border2:   #b0b6d0;
+  --accent:    #2e6edb;
+  --accent2:   #1e9e78;
+  --accent3:   #c97a10;
+  --accent4:   #b83060;
+  --text:      #1a1d2e;
+  --text-dim:  #6b748f;
+  --text-mid:  #4a5070;
+  --red:       #c04040;
+  --yellow:    #b08010;
+  --blue:      #2e5ec8;
+  --gray:      #6b748f;
+  --green:     #1e9e78;
+  --card-bg2:  #e8eaf2;
+  --card-bg:   #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ── HEADER ── */
+header {
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.logo {
+  font-family: 'Space Mono', 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.logo span { color: var(--text-dim); font-weight: 400; }
+.header-sep { width: 1px; height: 24px; background: var(--border); }
+.header-title { font-size: 13px; color: var(--text-mid); }
+.header-meta {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: right;
+}
+.meta-toggle {
+  display: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface2);
+  color: var(--text-mid);
+  font-size: 11px;
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+/* ── TABS ── */
+.tab-bar {
+  height: var(--tab-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  padding: 0 20px;
+  gap: 2px;
+  position: sticky;
+  top: var(--header-h);
+  z-index: 190;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
+  background: none;
+  color: var(--text-dim);
+  font-size: 12px;
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--text); background: var(--surface2); }
+.tab.active {
+  color: var(--accent);
+  background: var(--bg);
+  border-color: var(--border);
+  border-bottom-color: var(--bg);
+  margin-bottom: -1px;
+}
+.tab-label { font-size: 10px; opacity: 0.6; font-family: 'JetBrains Mono', 'Courier New', monospace; }
+
+/* ── PANELS ── */
+.panel { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
+.panel.active { display: block; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+}
+.filter-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+select, input[type="text"] {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  padding: 6px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+  /* Fix iOS dark mode: override native appearance so CSS background/color apply */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+select:focus, input[type="text"]:focus { border-color: var(--accent); }
+select {
+  cursor: pointer;
+  min-width: 120px;
+  /* Custom dropdown arrow that respects color scheme */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b748f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+/* Force option elements to inherit theme colors on supporting browsers */
+select option {
+  background: var(--surface2);
+  color: var(--text);
+}
+.filter-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+
+/* ── Mobile: label + control on one row ── */
+.filter-pair {
+  display: contents; /* transparent in flex, items appear as direct children */
+}
+@media (max-width: 600px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .filter-pair {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+  }
+  .filter-pair .filter-label {
+    flex-shrink: 0;
+    min-width: 80px;
+  }
+  .filter-pair select,
+  .filter-pair input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+  }
+  .filter-pair .mode-toggle,
+  .filter-pair .view-toggle,
+  .filter-pair .search-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+  .filter-sep { display: none; }
+}
+
+/* ── STAT CARDS ── */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 18px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--accent));
+}
+.stat-card .val {
+  font-family: 'Space Mono', 'Courier New', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-card .lbl { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.stat-card .sub { font-size: 10px; color: var(--text-mid); margin-top: 4px; font-family: 'JetBrains Mono', 'Courier New', monospace; }
+
+/* ── CHART GRID ── */
+.chart-grid { display: grid; gap: 14px; margin-bottom: 14px; min-width: 0; }
+.chart-grid-2 { grid-template-columns: 1fr 1fr; }
+.chart-grid-3 { grid-template-columns: 2fr 1fr; }
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+}
+.chart-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chart-title .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color, var(--accent));
+  flex-shrink: 0;
+}
+.chart-title-actions {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+}
+.chart-scroll-inner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.chart-scroll-inner canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body.chart-expanded-open { overflow: hidden; }
+.chart-card.chart-expanded {
+  position: fixed;
+  top: calc(var(--header-h) + var(--tab-h) + env(safe-area-inset-top) + 10px);
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 180;
+  display: flex !important;
+  flex-direction: column;
+  overflow: auto;
+  box-shadow: 0 22px 64px rgba(0,0,0,0.45);
+}
+.chart-card.chart-expanded .chart-wrap {
+  flex: 1 1 auto;
+  height: auto !important;
+  min-height: 420px;
+}
+.chart-card.chart-expanded #heatmapWrap,
+.chart-card.chart-expanded #boxplotWrap,
+.chart-card.chart-expanded .slope-wrap {
+  flex: 1 1 auto;
+  min-height: 420px;
+  overflow: auto;
+}
+
+.behavior-radar-wrap {
+  height: 500px;
+  max-width: 900px;
+  margin: 0 auto;
+  overflow: visible;
+}
+.behavior-time-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr);
+  gap: 16px;
+}
+.behavior-time-slot-wrap {
+  height: 280px;
+  position: relative;
+  overflow: visible;
+}
+@media (max-width: 900px) {
+  .behavior-time-grid { grid-template-columns: 1fr; }
+  .behavior-radar-wrap { height: 360px; }
+}
+@media (max-width: 600px) {
+  .behavior-radar-wrap { height: 300px; }
+  /* 雷達圖頁面：縮緊卡片 padding 和標題 margin，減少上下留白 */
+  #sub-radar .chart-card { padding: 10px; }
+  #sub-radar .chart-title { margin-bottom: 8px; font-size: 10px; }
+  #radarControls { margin-bottom: 5px !important; }
+  #clusterSummaryCards { margin-bottom: 5px !important; }
+}
+
+/* ── SLOPE CHART ── */
+.slope-wrap { overflow-x: auto; }
+.slope-svg { display: block; min-width: 300px; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.tag-red    { background: rgba(240,112,112,0.12); color: var(--red);    border: 1px solid rgba(240,112,112,0.2); }
+.tag-yellow { background: rgba(240,200,91,0.12);  color: var(--yellow); border: 1px solid rgba(240,200,91,0.2); }
+.tag-blue   { background: rgba(91,138,240,0.12);  color: var(--blue);   border: 1px solid rgba(91,138,240,0.2); }
+.tag-gray   { background: rgba(107,116,143,0.12); color: var(--gray);   border: 1px solid rgba(107,116,143,0.2); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 6px; bottom: 6px;
+  width: 2px;
+  background: var(--border);
+  border-radius: 2px;
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.tl-dot {
+  position: absolute;
+  left: -24px; top: 4px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  background: var(--surface);
+}
+.tl-dot.theory    { border-color: var(--accent); background: rgba(79,142,247,0.2); }
+.tl-dot.practicum { border-color: var(--accent2); background: rgba(100,212,168,0.2); }
+.tl-dot.summer    { border-color: var(--accent3); background: rgba(247,164,79,0.2); }
+.tl-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.tl-sem {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  background: var(--surface2);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.tl-sheet { font-size: 12px; font-weight: 600; color: var(--text); }
+.tl-type-badge {
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+.tl-type-theory    { background: rgba(79,142,247,0.15); color: var(--accent); }
+.tl-type-practicum { background: rgba(100,212,168,0.15); color: var(--accent2); }
+.tl-type-summer    { background: rgba(247,164,79,0.15); color: var(--accent3); }
+.tl-scores {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+.tl-score { display: flex; flex-direction: column; }
+.tl-score .s-lbl { font-size: 9px; color: var(--text-dim); text-transform: uppercase; }
+.tl-score .s-val { color: var(--text); font-weight: 600; }
+.tl-score .s-val.pass { color: var(--green); }
+.tl-score .s-val.fail { color: var(--red); }
+.tl-delta {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+.tl-delta.pos { background: rgba(100,212,168,0.12); color: var(--green); }
+.tl-delta.neg { background: rgba(240,112,112,0.12); color: var(--red); }
+.tl-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ── SEARCH ── */
+.search-wrap { position: relative; flex: 1; min-width: 160px; }
+.search-wrap input { width: 100%; padding-left: 32px; }
+.search-icon {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  font-size: 12px;
+  pointer-events: none;
+}
+.search-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 300;
+  display: none;
+}
+.search-results.open { display: block; }
+.search-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.1s;
+}
+.search-item:last-child { border-bottom: none; }
+.search-item:hover { background: var(--surface3); }
+.search-item .s-info { color: var(--text-dim); font-size: 10px; }
+
+/* ── QUADRANT ── */
+.quadrant-labels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+.q-label {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 10px;
+}
+.q-label .q-name { font-weight: 700; margin-bottom: 2px; }
+.q-label .q-desc { color: var(--text-dim); }
+
+/* ── NOTICE / EMPTY ── */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.notice {
+  background: rgba(247,164,79,0.08);
+  border-left: 3px solid var(--accent3);
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: 11px;
+  color: var(--accent3);
+  margin-bottom: 14px;
+}
+
+/* ── MODE TOGGLE ── */
+.mode-toggle {
+  display: flex;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.mode-btn {
+  padding: 5px 12px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.mode-btn.active { background: var(--accent); color: #fff; }
+
+/* ── Segmented Control (Panel C 族群切換) ── */
+.view-controls-seg {
+  display: flex;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.seg-btn {
+  background: transparent;
+  border: none;
+  padding: 6px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.seg-btn.active {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+}
+/* ── Panel C collapse when profile is showing ── */
+#profileWrap:not(:empty) + #cStats { margin-top: 10px; }
+.c-view-panel { transition: opacity 0.25s ease; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  :root { --header-h: 100px; }
+  .chart-grid-2, .chart-grid-3 { grid-template-columns: 1fr; }
+  .panel { padding: 12px; }
+  .filter-bar { gap: 8px; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .tab-label { display: none; }
+  body header {
+    height: calc(var(--header-h) + env(safe-area-inset-top));
+    padding: calc(env(safe-area-inset-top) + 7px) 10px 7px;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-content: center;
+  }
+  .header-sep { display: none; }
+  .header-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  body .year-range-badge {
+    order: 5;
+    flex: 0 0 auto;
+    padding: 3px 9px;
+  }
+  .subject-field {
+    order: 6;
+    flex: 0 0 auto;
+  }
+  .meta-toggle {
+    display: inline-flex;
+    order: 7;
+    align-items: center;
+    justify-content: center;
+  }
+  body .theme-toggle {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    font-size: 14px;
+  }
+  .header-meta {
+    display: none;
+    order: 20;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 10px;
+    right: 10px;
+    z-index: 210;
+    margin-left: 0;
+    padding: 8px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+    text-align: left;
+    font-size: 10px;
+    white-space: normal;
+  }
+  header.meta-open .header-meta { display: block; }
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+
+/* ── PWA / iOS SAFE AREA ── */
+header {
+  /* iOS safe-area: 讓 header 高度自動撐開，tab-bar 跟著偏移 */
+  height: calc(var(--header-h) + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+.tab-bar {
+  top: calc(var(--header-h) + env(safe-area-inset-top));
+}
+.panel-wrap {
+  padding-top: calc(var(--header-h) + var(--tab-h) + env(safe-area-inset-top));
+}
+/* 橫向可滑動容器允許 touch 橫向手勢 */
+#heatmapWrap, #boxplotWrap, .slope-wrap, [style*="overflow-x:auto"], [style*="overflow-x: auto"] {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+}
+
+/* 禁用 iOS 長按選單與點擊高亮（更接近 native app 感） */
+a, button { -webkit-touch-callout: none; }
+* { -webkit-tap-highlight-color: transparent; }
+input, button, select, textarea { -webkit-appearance: none; }
+
+/* ── iOS 安裝引導 Banner ── */
+.pwa-install-banner {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 420px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);   opacity: 1; }
+}
+.pwa-install-banner img {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.pwa-install-banner .banner-text {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.pwa-install-banner .banner-text strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 2px;
+  color: var(--accent);
+}
+.pwa-install-banner .banner-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── SW 更新提示 ── */
+.sw-update-banner {
+  position: fixed;
+  top: calc(var(--header-h) + var(--tab-h) + 8px + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9998;
+  box-shadow: 0 4px 16px rgba(79,142,247,0.4);
+  animation: slideDown 0.3s ease;
+}
+@keyframes slideDown {
+  from { transform: translateX(-50%) translateY(-10px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}
+.sw-update-banner button {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ── TOOLTIP OVERRIDE ── */
+.chartjs-tooltip {
+  background: var(--surface2) !important;
+  border: 1px solid var(--border2) !important;
+  border-radius: 8px !important;
+  font-family: 'Noto Sans TC', sans-serif !important;
+}
+
+/* ── SVG 懸浮 Tooltip（熱力圖、箱形圖、坡度圖）── */
+#svgTooltip {
+  position: fixed;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  pointer-events: none;
+  z-index: 9000;
+  max-width: 220px;
+  line-height: 1.6;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  display: none;
+  white-space: pre-wrap;
+}
+body.light #svgTooltip {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* ── 圖表說明按鈕 ── */
+.chart-info-btn,
+.chart-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 6px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+  vertical-align: middle;
+}
+.chart-expand-btn {
+  border-radius: 5px;
+  font-size: 12px;
+}
+.chart-info-btn:hover,
+.chart-expand-btn:hover,
+.chart-expand-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ── Dark mode: loading overlay 不顯示白色 ── */
+.loading-overlay {
+  background: rgba(11,13,20,0.82) !important;
+}
+body.light .loading-overlay {
+  background: rgba(255,255,255,0.82) !important;
+}
+
+/* ── 說明 Popover ── */
+.chart-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 300px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.7;
+  z-index: 8000;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+  display: none;
+  pointer-events: auto;
+}
+body.light .chart-popover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.chart-popover.open { display: block; }
+.chart-popover::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 16px;
+  width: 10px; height: 10px;
+  background: var(--surface2);
+  border-left: 1px solid var(--border2);
+  border-top: 1px solid var(--border2);
+  transform: rotate(45deg);
+}
+.chart-popover-title {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 12px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chart-popover-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+.chart-popover ul {
+  margin: 6px 0 0 0;
+  padding-left: 16px;
+  color: var(--text-mid);
+  font-size: 11px;
+}
+.chart-popover li { margin-bottom: 3px; }
+.chart-popover .popover-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+/* 讓 chart-title 成為相對定位容器 */
+.chart-title { position: relative; }
+
+/* ── 年份範圍標籤 ── */
+.year-range-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(79,142,247,0.12);
+  border: 1px solid rgba(79,142,247,0.25);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  white-space: nowrap;
+}
+body.light .year-range-badge {
+  background: rgba(46,110,219,0.10);
+  border-color: rgba(46,110,219,0.25);
+}
+.behavior-range-badge {
+  background: rgba(46,204,113,0.12);
+  border-color: rgba(46,204,113,0.28);
+  color: #2ecc71;
+}
+body.light .behavior-range-badge {
+  background: rgba(34,153,84,0.10);
+  border-color: rgba(34,153,84,0.25);
+  color: #1f8f55;
+}
+.subject-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  color: var(--text-dim);
+}
+.subject-field span:not(.year-range-badge) {
+  font-size: 10px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+/* ── 深淺模式切換按鈕 ── */
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-mid);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── 頁籤 D 學制色塊 ── */
+.program-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.prog-2yr-gen      { background: rgba(79,142,247,0.15); color: #4f8ef7; }
+.prog-2yr-work     { background: rgba(100,212,168,0.15); color: #64d4a8; }
+.prog-2yr-night    { background: rgba(247,164,79,0.15); color: #f7a44f; }
+.prog-4yr          { background: rgba(224,108,140,0.15); color: #e06c8c; }
+.prog-post         { background: rgba(190,120,240,0.15); color: #be78f0; }
+.prog-retake-class  { background: rgba(240,200,91,0.15); color: #f0c85b; }
+.prog-retake-student{ background: rgba(160,176,192,0.15); color: #a0b0c0; }
+
+/* ── 頁籤 D 整屆圖表 ── */
+#panelD .view-toggle {
+  display: flex;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+#panelD .view-btn {
+  padding: 5px 14px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+#panelD .view-btn.active { background: var(--accent); color: #fff; }
+
+/* ── PRINT PANEL ── */
+.print-selection-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.print-selection-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 12px;
+}
+.print-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.print-options .filter-label { margin-right: -2px; }
+.print-options select { min-width: 96px; }
+.print-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+.print-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color .15s, background .15s, box-shadow .15s;
+  user-select: none;
+}
+.print-choice:hover {
+  border-color: rgba(79,142,247,0.55);
+}
+.print-choice input[type="checkbox"] {
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+  appearance: checkbox;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.print-choice.selected {
+  border-color: rgba(79,142,247,0.75);
+  background: rgba(79,142,247,0.14);
+  box-shadow: 0 0 0 1px rgba(79,142,247,0.12) inset;
+}
+.print-choice .print-tab {
+  font-size: 10px;
+  line-height: 1;
+  color: var(--text-dim);
+  background: rgba(107,116,143,0.14);
+  border-radius: 4px;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+.print-choice .print-label {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 0;
+}
+.print-summary {
+  margin-top: 10px;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+/* ── 規則五：重修生全域開關 ── */
+.retaker-switch {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 11px; border-radius: 20px; cursor: pointer;
+  font-size: 10px; font-family: 'Noto Sans TC', sans-serif;
+  border: 1px solid var(--border2); background: var(--surface2);
+  color: var(--text-dim); transition: all 0.15s; white-space: nowrap;
+  flex-shrink: 0;
+}
+.retaker-switch.active {
+  border-color: var(--accent4); background: rgba(155,89,182,0.15);
+  color: var(--accent4); font-weight: 700;
+}
+.retaker-switch.locked {
+  opacity: 0.55; cursor: not-allowed; pointer-events: none;
+}
+
+/* ── 策略A：取代 onmouseover/onmouseout 的 hover 樣式 ── */
+.hover-accent-btn:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+/* ── 篩選器收合摘要列 ── */
+.filter-collapse-bar {
+  display: none; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  background: var(--surface2); border: 1px solid var(--border2);
+  margin-bottom: 8px; font-size: 11px; color: var(--text-dim);
+  transition: border-color 0.15s;
+}
+.filter-collapse-bar:hover { border-color: var(--accent); }
+.filter-collapse-bar .collapse-summary {
+  flex: 1; color: var(--text); font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.filter-collapse-bar .collapse-icon { font-size: 12px; }
+.filter-bar.collapsed { display: none !important; }
+</style>
+<!-- 核心篩選邏輯模組 -->
+<script defer src="js/filter-engine.js"></script>
+<!--
+  Clickjacking 防護（GitHub Pages 替代方案）：
+  GitHub Pages 不支援自訂 HTTP headers，無法設定 frame-ancestors/X-Frame-Options。
+  js/frame-guard.js 同步載入（無 defer），在頁面渲染前偵測 iframe 嵌入並強制跳出。
+-->
+<script src="js/frame-guard.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo">LA<span>/</span>DASH</div>
+  <div class="header-sep"></div>
+  <div class="header-title">學習分析儀表板</div>
+  <span class="year-range-badge" id="yearRangeBadge">—</span>
+  <span class="year-range-badge behavior-range-badge" id="behaviorRangeBadge" style="display:none">行為 —</span>
+  <div class="subject-field" id="subjectMeta">
+    <span class="year-range-badge behavior-range-badge" id="subjectInput"></span>
+  </div>
+  <div class="header-meta" id="metaInfo">載入中...</div>
+  <button type="button" class="meta-toggle" id="metaToggle" data-action="toggleMetaInfo" aria-expanded="false">資訊</button>
+  <button type="button" class="theme-toggle" id="themeToggle" data-action="toggleTheme" title="切換深/淺色模式">🌙</button>
+</header>
+
+<!-- SVG 懸浮 Tooltip -->
+<div id="svgTooltip"></div>
+
+<div class="tab-bar" role="tablist" aria-label="分析面板">
+  <button type="button" class="tab active" id="tab-btn-D" role="tab" aria-selected="true"  aria-controls="panelD" data-action="switchTab" data-arg="D">
+    <span>跨屆比較</span>
+    <span class="tab-label">Cohort Analysis</span>
+  </button>
+  <button type="button" class="tab" id="tab-btn-A" role="tab" aria-selected="false" aria-controls="panelA" data-action="switchTab" data-arg="A">
+    <span>班級輪廓</span>
+    <span class="tab-label">Class Overview</span>
+  </button>
+  <button type="button" class="tab" id="tab-btn-C" role="tab" aria-selected="false" aria-controls="panelC" data-action="switchTab" data-arg="C">
+    <span>學生表現</span>
+    <span class="tab-label">Performance &amp; Retaker</span>
+  </button>
+  <button type="button" class="tab" id="tab-btn-L" role="tab" aria-selected="false" aria-controls="panelL" data-action="switchTab" data-arg="L">
+    <span>📊 學習行為</span>
+    <span class="tab-label">Learning Behavior</span>
+  </button>
+  <button type="button" class="tab" id="tab-btn-R" role="tab" aria-selected="false" aria-controls="panelR" data-action="switchTab" data-arg="R">
+    <span>🔴 高風險報告</span>
+    <span class="tab-label">At-Risk Report</span>
+  </button>
+  <button type="button" class="tab" id="tab-btn-P" role="tab" aria-selected="false" aria-controls="panelP" data-action="switchTab" data-arg="P">
+    <span>🖨 列印</span>
+    <span class="tab-label">Print</span>
+  </button>
+</div>
+
+<!-- ══ PANEL A ══ -->
+<div class="panel" id="panelA" role="tabpanel" aria-labelledby="tab-btn-A">
+  <!-- 篩選器收合摘要列 -->
+  <div class="filter-collapse-bar" id="aCollapseBar" data-action="toggleFilterCollapse" data-arg="A">
+    <span class="collapse-icon">▶</span>
+    <span class="collapse-summary" id="aCollapseSummary">全部條件</span>
+    <span style="font-size:10px;margin-left:auto">點擊展開篩選器</span>
+  </div>
+
+  <div class="filter-bar" id="aFilterBar">
+
+    <!-- 1. 學期 -->
+    <div class="filter-pair">
+      <span class="filter-label">學期 Semester</span>
+      <select id="aFilterSem"></select>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 2. 學制（規則一連動） -->
+    <div class="filter-pair">
+      <span class="filter-label">學制 Program</span>
+      <select id="aFilterProgram">
+        <option value="all">全部學制</option>
+        <option value="2yr_gen">二技一般</option>
+        <option value="2yr_work">二技在職</option>
+        <option value="2yr_night">二技夜間</option>
+        <option value="4yr">四技一般</option>
+        <option value="post">學士後護</option>
+        <option value="retake_class">重修班</option>
+        <option value="retake_student">重修生</option>
+      </select>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 3. 課程類型（規則二連動） -->
+    <div class="filter-pair">
+      <span class="filter-label">課程類型 Type</span>
+      <select id="aFilterType">
+        <option value="all">全部 All</option>
+        <option value="theory">正課</option>
+        <option value="practicum">實驗課</option>
+      </select>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 4. 班級（規則三動態生成，含筆數） -->
+    <div class="filter-pair">
+      <span class="filter-label">班級 Class</span>
+      <select id="aFilterSheet"></select>
+    </div>
+
+    <!-- 重修生全域開關（規則五） -->
+    <button type="button" id="aRetakerSwitch" class="retaker-switch active"
+            data-action="toggleRetakerSwitch" data-arg="A"
+            title="切換是否包含重修生資料">
+      👤 包含重修生
+    </button>
+
+    <!-- 清除所有條件按鈕 -->
+    <button type="button" id="aResetBtn" class="hover-accent-btn" data-action="resetAFilters"
+            style="margin-left:auto;padding:4px 12px;border-radius:6px;border:1px solid var(--border2);
+                   background:var(--surface2);color:var(--text-dim);font-size:10px;cursor:pointer;
+                   white-space:nowrap;flex-shrink:0;transition:all 0.15s">
+      ↺ 清除條件
+    </button>
+  </div>
+
+  <!-- 重置提示列（規則四） -->
+  <div id="aResetHint" style="display:none;padding:6px 12px;margin-bottom:8px;border-radius:6px;
+       font-size:11px;background:rgba(247,164,79,0.10);border:1px solid rgba(247,164,79,0.25);
+       color:var(--accent3);align-items:center;gap:10px">
+    <span id="aResetHintText"></span>
+    <button type="button" id="aUndoBtn" data-action="undoAFilterReset"
+            style="padding:2px 10px;border-radius:4px;border:1px solid var(--accent3);
+                   background:none;color:var(--accent3);font-size:10px;cursor:pointer;white-space:nowrap">
+      復原
+    </button>
+  </div>
+
+  <!-- 防空值提示列 -->
+  <div id="aEmptyHint" style="display:none;padding:8px 14px;margin-bottom:8px;border-radius:6px;
+       font-size:11px;background:rgba(240,112,112,0.10);border:1px solid rgba(240,112,112,0.25);
+       color:var(--red)">
+  </div>
+
+  <div class="stat-row" id="aStats"></div>
+
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title" style="--accent-color:var(--accent)">
+        <div class="dot"></div>成績分佈 Score Distribution
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chartDist"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="--accent-color:var(--accent3)">
+        <div class="dot"></div>期中 vs 期末 Midterm vs Final
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chartMidFinal"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title" style="--accent-color:var(--accent2)">
+      <div class="dot"></div>跨屆趨勢 Cross-Semester Trend
+      <span style="color:var(--text-dim);font-size:9px;margin-left:4px">— 同一班級名稱跨學期平均成績</span>
+    </div>
+    <div class="filter-bar" style="padding:8px 0;background:none;border:none;margin-bottom:8px">
+      <span class="filter-label">追蹤班級</span>
+      <select id="aTrendSheet"></select>
+    </div>
+    <div class="chart-wrap" style="height:200px">
+      <canvas id="chartTrend"></canvas>
+    </div>
+  </div>
+
+  <!-- A1: 常態分布曲線疊加 -->
+  <div class="chart-card" style="margin-top:14px">
+    <div class="chart-title" style="--accent-color:var(--accent)">
+      <div class="dot"></div>常態分布曲線疊加 Normal Distribution Overlay
+      <span style="color:var(--text-dim);font-size:9px;margin-left:6px">— 灰線為理論常態曲線</span>
+    </div>
+    <div class="chart-wrap" style="height:200px">
+      <canvas id="chartNormalOverlay"></canvas>
+    </div>
+  </div>
+
+  <!-- A2 & A3: 兩欄 -->
+  <div class="chart-grid chart-grid-2" style="margin-top:14px">
+    <div class="chart-card">
+      <div class="chart-title" style="--accent-color:var(--accent3)">
+        <div class="dot"></div>期中 → 期末 線性迴歸 Regression
+        <span id="aRsqLabel" style="color:var(--accent2);font-size:10px;margin-left:8px;font-family:'JetBrains Mono',monospace"></span>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chartRegression"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="--accent-color:var(--accent4)">
+        <div class="dot"></div>與前次同班比較 Δ vs Previous Semester
+        <span style="color:var(--text-dim);font-size:9px;margin-left:4px">— 自動尋找上一個有同班資料的學期</span>
+      </div>
+      <div class="filter-bar" style="padding:8px 0;background:none;border:none;margin-bottom:6px">
+        <span class="filter-label">比較基準 Compare</span>
+        <select id="aCompareSem"></select>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chartVariance"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- bFilterType: 隱藏的課別選單，供 renderB() 讀取 -->
+<select id="bFilterType" style="display:none" aria-hidden="true" tabindex="-1"><option value="theory">正課</option><option value="practicum">實驗</option></select>
+
+<!-- ══ PANEL C ══ (整合：全體學生 + 重修分析) -->
+<div class="panel" id="panelC" role="tabpanel" aria-labelledby="tab-btn-C">
+  <!-- 篩選器收合摘要列 -->
+  <div class="filter-collapse-bar" id="cCollapseBar" data-action="toggleFilterCollapse" data-arg="C">
+    <span class="collapse-icon">▶</span>
+    <span class="collapse-summary" id="cCollapseSummary">全部條件</span>
+    <span style="font-size:10px;margin-left:auto">點擊展開篩選器</span>
+  </div>
+
+  <!-- ── 模式切換（常駐頂部） ── -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+    <div class="view-controls-seg" id="cViewControls">
+      <button type="button" class="seg-btn active" data-view="general" data-action="switchCView" data-arg="general">全體學生</button>
+      <button type="button" class="seg-btn" data-view="retake"  data-action="switchCView" data-arg="retake">重修分析</button>
+    </div>
+    <span id="cNoDataHint" style="display:none;font-size:10px;color:var(--yellow);margin-left:8px">⚠ 此學期無 LMS 行為資料</span>
+    <!-- 清除條件按鈕（全體模式顯示） -->
+    <button type="button" id="cResetBtn" class="hover-accent-btn" data-action="resetCFilters"
+            style="margin-left:auto;padding:4px 12px;border-radius:6px;border:1px solid var(--border2);
+                   background:var(--surface2);color:var(--text-dim);font-size:10px;cursor:pointer;
+                   white-space:nowrap;transition:all 0.15s">
+      ↺ 清除條件
+    </button>
+  </div>
+
+  <!-- ══ 全體學生篩選器組 ══ -->
+  <div id="cFilterGeneral" class="filter-bar" style="flex-wrap:wrap;gap:10px 14px">
+
+    <!-- 1. 學期 -->
+    <div class="filter-pair">
+      <span class="filter-label">學期 Semester</span>
+      <select id="cFilterSem">
+        <option value="all">全部學期 All</option>
+      </select>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 2. 學制 -->
+    <div class="filter-pair">
+      <span class="filter-label">學制 Program</span>
+      <select id="cFilterProgram">
+        <option value="all">全部學制</option>
+        <option value="2yr_gen">二技一般</option>
+        <option value="2yr_work">二技在職</option>
+        <option value="2yr_night">二技夜間</option>
+        <option value="4yr">四技一般</option>
+        <option value="post">學士後護</option>
+        <option value="retake_class">重修班</option>
+        <option value="retake_student">重修生</option>
+      </select>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 3. 課程類型 -->
+    <div class="filter-pair">
+      <span class="filter-label">課程類型 Type</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="cTypeAll"    data-action="setCType" data-arg="all">全部</button>
+        <button type="button" class="mode-btn"        id="cTypeTheory" data-action="setCType" data-arg="theory">正課</button>
+        <button type="button" class="mode-btn"        id="cTypePrac"   data-action="setCType" data-arg="practicum">實驗課</button>
+      </div>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 4. 評量指標 -->
+    <div class="filter-pair">
+      <span class="filter-label">評量指標 Metric</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="cExamSem" data-action="setCExam" data-arg="semester_score">學期</button>
+        <button type="button" class="mode-btn"        id="cExamMid" data-action="setCExam" data-arg="midterm">期中</button>
+        <button type="button" class="mode-btn"        id="cExamFin" data-action="setCExam" data-arg="final">期末</button>
+      </div>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 5. 及格狀況 -->
+    <div class="filter-pair">
+      <span class="filter-label">及格狀況 Pass</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="cPassAll"  data-action="setCPass" data-arg="all">全體</button>
+        <button type="button" class="mode-btn"        id="cPassPass" data-action="setCPass" data-arg="pass">✅ 及格</button>
+        <button type="button" class="mode-btn"        id="cPassFail" data-action="setCPass" data-arg="fail">❌ 不及格</button>
+      </div>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 6. 搜尋學號（選填，高亮用） -->
+    <div class="filter-pair">
+      <span class="filter-label">搜尋學號 Search ID</span>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="cSearch" placeholder="輸入學號片段（選填，高亮標示）"
+               autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 重修分析篩選器組 ══ -->
+  <div id="cFilterRetake" class="filter-bar" style="display:none;flex-wrap:wrap;gap:10px 14px">
+
+    <!-- 1. 搜尋學號（必填） -->
+    <div class="filter-pair">
+      <span class="filter-label">搜尋學號 <span style="color:var(--red)">*必填</span></span>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="cSearchRetake" placeholder="請輸入學號片段以查詢重修記錄"
+               autocomplete="off">
+        <div class="search-results" id="searchResultsRetake"></div>
+      </div>
+    </div>
+    <div class="filter-sep"></div>
+
+    <!-- 2. 評量指標 -->
+    <div class="filter-pair">
+      <span class="filter-label">評量指標 Metric</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="cExamSemR" data-action="setCExam" data-arg="semester_score">學期</button>
+        <button type="button" class="mode-btn"        id="cExamMidR" data-action="setCExam" data-arg="midterm">期中</button>
+        <button type="button" class="mode-btn"        id="cExamFinR" data-action="setCExam" data-arg="final">期末</button>
+      </div>
+    </div>
+
+    <!-- 空學號提示 -->
+    <span id="cRetakeSearchHint"
+          style="margin-left:8px;font-size:11px;color:var(--accent3);white-space:nowrap;align-self:center">
+      ← 請先輸入學號以查看個案重修軌跡
+    </span>
+  </div>
+
+  <!-- 課程類型鎖定提示（全體模式） -->
+  <div id="cTypeLockHint" style="display:none;padding:5px 12px;margin-bottom:6px;border-radius:6px;
+       font-size:11px;background:rgba(247,164,79,0.08);border:1px solid rgba(247,164,79,0.2);
+       color:var(--accent3)"></div>
+
+  <!-- 防空值提示 -->
+  <div id="cEmptyHint" style="display:none;padding:8px 14px;margin-bottom:8px;border-radius:6px;
+       font-size:11px;background:rgba(240,112,112,0.10);border:1px solid rgba(240,112,112,0.25);
+       color:var(--red)"></div>
+
+  <!-- ── 個案搜尋結果（常駐，搜尋後展開） ── -->
+  <div id="profileWrap"></div>
+
+  <!-- ── 統計卡 ── -->
+  <div class="stat-row" id="cStats"></div>
+
+  <!-- ── 視圖面板：全體學生 ── -->
+  <div id="cPanelGeneral" class="c-view-panel">
+    <div class="chart-grid chart-grid-2" style="margin-bottom:14px">
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent)">
+          <div class="dot"></div>成績級距分布 Score Distribution
+        </div>
+        <div class="chart-wrap" style="height:220px">
+          <canvas id="cChartDist"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent3)">
+          <div class="dot"></div>各學期異常事件密度 Anomaly Density by Semester
+          <span style="color:var(--text-dim);font-size:9px;margin-left:4px">— 全體學生異常標籤彙總</span>
+        </div>
+        <div class="chart-wrap" style="height:220px">
+          <canvas id="chartAnomalyDensity"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 視圖面板：重修分析 ── -->
+  <div id="cPanelRetake" class="c-view-panel" style="display:none">
+
+    <!-- 統計卡標題列（含說明按鈕） -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;position:relative">
+      <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim)">重修概況統計</span>
+      <!-- 問號說明按鈕 -->
+      <button type="button" id="bStatsHelpBtn" class="hover-accent-btn"
+        data-action="toggleBStatsHelp"
+        style="width:20px;height:20px;border-radius:50%;border:1px solid var(--border2);
+               background:var(--surface2);color:var(--text-dim);font-size:11px;font-weight:700;
+               cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;
+               flex-shrink:0;transition:all 0.15s;padding:0"
+        title="說明卡片含義">?</button>
+
+      <!-- 說明彈出面板 -->
+      <div id="bStatsHelpPanel"
+        style="display:none;position:absolute;top:28px;left:0;z-index:300;
+               background:var(--surface);border:1px solid var(--border2);border-radius:10px;
+               padding:14px 16px;min-width:280px;max-width:340px;
+               box-shadow:0 8px 24px rgba(0,0,0,0.18);font-size:12px;line-height:1.6">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:12px;font-weight:700;color:var(--text)">📊 統計卡說明</span>
+          <button type="button" data-action="hidePanel" data-target="bStatsHelpPanel"
+            style="background:none;border:none;color:var(--text-dim);font-size:16px;cursor:pointer;
+                   line-height:1;padding:0 2px" title="關閉">×</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="min-width:10px;height:10px;border-radius:50%;background:var(--accent4);
+                         margin-top:4px;flex-shrink:0;display:inline-block"></span>
+            <div>
+              <div style="font-weight:600;color:var(--text)">重修學生 Retakers</div>
+              <div style="color:var(--text-dim)">在目前篩選條件下，曾重修同一門課的不重複學生人數。</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="min-width:10px;height:10px;border-radius:50%;background:var(--green);
+                         margin-top:4px;flex-shrink:0;display:inline-block"></span>
+            <div>
+              <div style="font-weight:600;color:var(--text)">進步 Improved（Δ &gt; 0）</div>
+              <div style="color:var(--text-dim)">重修後成績高於首修成績（分數差 Δ 為正值）的修課次數。</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="min-width:10px;height:10px;border-radius:50%;background:var(--red);
+                         margin-top:4px;flex-shrink:0;display:inline-block"></span>
+            <div>
+              <div style="font-weight:600;color:var(--text)">退步 Declined（Δ &lt; 0）</div>
+              <div style="color:var(--text-dim)">重修後成績反而低於首修成績（分數差 Δ 為負值）的修課次數。</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="min-width:10px;height:10px;border-radius:50%;background:var(--accent3);
+                         margin-top:4px;flex-shrink:0;display:inline-block"></span>
+            <div>
+              <div style="font-weight:600;color:var(--text)">平均 Δ Avg Delta（首修 → 重修）</div>
+              <div style="color:var(--text-dim)">所有重修紀錄的「重修分 − 首修分」平均值，正值代表整體有進步，負值代表整體退步。</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);
+                    font-size:10px;color:var(--text-dim)">
+          ℹ Δ = 重修成績 − 首修成績；統計結果會依上方篩選條件即時更新。
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row" id="bStats" style="margin-bottom:14px"></div>
+
+    <div class="filter-bar" style="padding:8px 0;background:none;border:none;margin-bottom:10px">
+      <span class="filter-label">顯示模式 Mode</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="modeBySheet"   data-action="setBMode" data-arg="sheet">依班級名稱</button>
+        <button type="button" class="mode-btn"        id="modeByStudent" data-action="setBMode" data-arg="student">同學號全紀錄</button>
+      </div>
+      <div class="filter-sep"></div>
+      <span class="filter-label">課程類型 Type</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="bTypeTheory"    data-action="setBType" data-arg="theory">正課</button>
+        <button type="button" class="mode-btn"        id="bTypePracticum" data-action="setBType" data-arg="practicum">實驗課</button>
+      </div>
+    </div>
+
+    <div class="chart-grid chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent4)">
+          <div class="dot"></div>首修 → 重修 進退步 Slope Chart
+        </div>
+        <div class="slope-wrap">
+          <svg id="slopeChart" class="slope-svg" height="280"></svg>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent3)">
+          <div class="dot"></div>Δ 分佈 Delta Distribution
+        </div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartDelta"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card" id="quadrantCard" style="display:none;margin-top:14px">
+      <div class="chart-title" style="--accent-color:var(--accent2)">
+        <div class="dot"></div>正課 × 實驗 四象限 Cross-Domain Quadrant
+        <span style="color:var(--text-dim);font-size:9px;margin-left:6px">⚠ 此圖同時比較正課與實驗課，不受上方課程篩選影響</span>
+      </div>
+      <div class="chart-wrap" style="height:260px"><canvas id="chartQuadrant"></canvas></div>
+      <div class="quadrant-labels">
+        <div class="q-label"><div class="q-name" style="color:var(--accent2)">Q1 右上：雙強</div><div class="q-desc">正課強 · 實驗強 → 無需介入</div></div>
+        <div class="q-label"><div class="q-name" style="color:var(--accent3)">Q2 左上：實作強</div><div class="q-desc">正課弱 · 實驗強 → 加強流病報告邏輯</div></div>
+        <div class="q-label"><div class="q-name" style="color:var(--accent3)">Q4 右下：學理強</div><div class="q-desc">正課強 · 實驗弱 → 補充致病機轉概念</div></div>
+        <div class="q-label"><div class="q-name" style="color:var(--red)">Q3 左下：高風險</div><div class="q-desc">正課弱 · 實驗弱 → 優先輔導</div></div>
+      </div>
+    </div>
+
+    <div class="chart-grid chart-grid-2" style="margin-top:14px">
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent4)">
+          <div class="dot"></div>重修生首修成績分布 Retaker First-Score Distribution
+        </div>
+        <div class="chart-wrap" style="height:200px"><canvas id="chartRetakerFirstDist"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent2)">
+          <div class="dot"></div>重修改善率依學制 Δ by Program
+        </div>
+        <div class="chart-wrap" style="height:200px"><canvas id="chartDeltaByProgram"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-grid chart-grid-2" style="margin-top:14px">
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent3)">
+          <div class="dot"></div>重修次數分布 Retake Count Distribution
+        </div>
+        <div class="chart-wrap" style="height:220px"><canvas id="chartRetakeCount"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent4)">
+          <div class="dot"></div>首修成績 vs 重修進步幅度 First Score vs Δ
+        </div>
+        <div class="chart-wrap" style="height:220px"><canvas id="chartFirstVsDelta"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PANEL D ══ -->
+<div class="panel active" id="panelD" role="tabpanel" aria-labelledby="tab-btn-D">
+  <!-- 篩選器收合摘要列 -->
+  <div class="filter-collapse-bar" id="dCollapseBar" data-action="toggleFilterCollapse" data-arg="D">
+    <span class="collapse-icon">▶</span>
+    <span class="collapse-summary" id="dCollapseSummary">全部條件</span>
+    <span style="font-size:10px;margin-left:auto">點擊展開篩選器</span>
+  </div>
+
+  <!-- ── 學期雙模選擇器 ── -->
+  <div class="filter-bar" id="dSemFilterBar">
+    <div class="filter-pair" style="align-items:flex-start;flex-wrap:wrap;gap:6px">
+      <span class="filter-label" style="margin-top:6px">學期 Semester</span>
+
+      <!-- 模式切換 -->
+      <div class="mode-toggle" style="flex-shrink:0">
+        <button type="button" class="mode-btn active" id="dSemModeRange" data-action="setDSemMode" data-arg="range">範圍</button>
+        <button type="button" class="mode-btn" id="dSemModeMulti" data-action="setDSemMode" data-arg="multi">多選</button>
+      </div>
+
+      <!-- 範圍模式：雙滑桿 -->
+      <div id="dSemRangeWrap" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <input type="range" id="dSemStart" min="0" max="29" step="1" value="0"
+               aria-label="學期範圍起始"
+               style="width:110px;accent-color:var(--accent)"
+              >
+        <span style="font-size:10px;color:var(--text-dim)">–</span>
+        <input type="range" id="dSemEnd" min="0" max="29" step="1" value="29"
+               aria-label="學期範圍結束"
+               style="width:110px;accent-color:var(--accent)"
+              >
+        <span id="dSemRangeLabel" class="year-range-badge" style="min-width:130px;justify-content:center">100(1) – 114(2)</span>
+        <span id="dSemRangeCount" style="font-size:10px;color:var(--text-dim)"></span>
+      </div>
+
+      <!-- 多選模式：膠囊 -->
+      <div id="dSemMultiWrap" style="display:none;flex-wrap:wrap;gap:4px;max-width:100%">
+        <!-- 由 initDSemFilter() 動態生成 -->
+      </div>
+      <span id="dSemMultiCount" style="display:none;font-size:10px;color:var(--text-dim);margin-top:6px"></span>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-pair">
+      <span class="filter-label">學制 Program</span>
+      <select id="dFilterProgram">
+        <option value="all">全部學制 All</option>
+        <option value="2yr_gen">二技一般班</option>
+        <option value="2yr_work">二技在職</option>
+        <option value="2yr_night">二技夜間</option>
+        <option value="4yr">四技一般</option>
+        <option value="post">學士後護</option>
+        <option value="retake_class">重修班</option>
+        <option value="retake_student">重修生</option>
+      </select>
+    </div>
+    <div class="filter-sep"></div>
+    <div class="filter-pair">
+      <span class="filter-label">課程類型 Type</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="dTypeTheory" data-action="setDType" data-arg="theory">正課</button>
+        <button type="button" class="mode-btn" id="dTypePracticum" data-action="setDType" data-arg="practicum">實驗課</button>
+      </div>
+    </div>
+    <div class="filter-sep"></div>
+    <div class="filter-pair">
+      <span class="filter-label">顯示模式 View</span>
+      <div class="view-toggle">
+        <button type="button" class="view-btn active" id="dViewMerge" data-action="setDView" data-arg="merge">合併總平均</button>
+        <button type="button" class="view-btn" id="dViewClass" data-action="setDView" data-arg="class">各班獨立</button>
+      </div>
+    </div>
+    <div class="filter-sep"></div>
+    <div class="filter-pair">
+      <span class="filter-label">指標 Metric</span>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="dMetricSem" data-action="setDMetric" data-arg="semester_score">學期</button>
+        <button type="button" class="mode-btn" id="dMetricMid" data-action="setDMetric" data-arg="midterm">期中</button>
+        <button type="button" class="mode-btn" id="dMetricFin" data-action="setDMetric" data-arg="final">期末</button>
+      </div>
+    </div>
+
+    <!-- 重修生全域開關（規則五） -->
+    <button type="button" id="dRetakerSwitch" class="retaker-switch active"
+            data-action="toggleRetakerSwitch" data-arg="D"
+            title="切換是否包含重修生資料">
+      👤 包含重修生
+    </button>
+  </div>
+
+  <!-- 統計卡 -->
+  <div class="stat-row" id="dStats"></div>
+
+  <!-- 學制圖例 -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center">
+    <span style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">學制圖例</span>
+    <span class="program-badge prog-2yr-gen">二技一般</span>
+    <span class="program-badge prog-2yr-work">二技在職</span>
+    <span class="program-badge prog-2yr-night">二技夜間</span>
+    <span class="program-badge prog-4yr">四技一般</span>
+    <span class="program-badge prog-post">學士後護</span>
+    <span class="program-badge prog-retake-class">重修班</span>
+    <span class="program-badge prog-retake-student">重修生</span>
+  </div>
+
+  <!-- 模式提示列 -->
+  <div id="dModeHint" style="margin-bottom:10px;padding:6px 12px;border-radius:6px;font-size:11px;
+       background:rgba(79,142,247,0.08);border:1px solid rgba(79,142,247,0.18);color:var(--text-dim)">
+    📈 <strong style="color:var(--accent)">範圍模式</strong> — 顯示連續趨勢折線；最多 6 學制折線，超過時自動合併為總平均。
+  </div>
+
+  <!-- 跨屆趨勢折線圖 -->
+  <div class="chart-card" style="margin-bottom:14px">
+    <div class="chart-title" style="--accent-color:var(--accent)">
+      <div class="dot"></div>
+      <span id="dChartTitle">整屆跨學期趨勢 Cohort Cross-Semester Trend</span>
+    </div>
+    <div class="chart-wrap" style="height:260px">
+      <canvas id="chartCohortTrend"></canvas>
+    </div>
+  </div>
+
+  <!-- 學制橫向比較（多選模式專屬） -->
+  <div id="dProgramBarWrap" style="display:none">
+    <div class="chart-grid chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent2)">
+          <div class="dot"></div>各學期學制比較 Program Comparison per Semester
+        </div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartProgramBar"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title" style="--accent-color:var(--accent3)">
+          <div class="dot"></div>及格率比較 Pass Rate Comparison
+        </div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartPassRate"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 及格率折線（範圍模式專屬） -->
+  <div id="dPassRateWrap">
+    <div class="chart-card" style="margin-top:14px">
+      <div class="chart-title" style="--accent-color:var(--accent3)">
+        <div class="dot"></div>及格率趨勢 Pass Rate Trend
+      </div>
+      <div class="chart-wrap" style="height:240px">
+        <canvas id="chartPassRateRange"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 各班詳細表格（各班獨立模式下顯示） -->
+  <div class="chart-card" id="dClassTable" style="display:none;margin-top:14px">
+    <div class="chart-title" style="--accent-color:var(--accent4)">
+      <div class="dot"></div>各班成績明細 Class Detail
+    </div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:11px" id="dDetailTable">
+        <thead>
+          <tr style="background:var(--surface2)">
+            <th style="padding:8px 10px;text-align:left;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">學期</th>
+            <th style="padding:8px 10px;text-align:left;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">班級</th>
+            <th style="padding:8px 10px;text-align:left;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">學制</th>
+            <th style="padding:8px 10px;text-align:right;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">人數</th>
+            <th style="padding:8px 10px;text-align:right;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">期中均</th>
+            <th style="padding:8px 10px;text-align:right;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">期末均</th>
+            <th style="padding:8px 10px;text-align:right;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">學期均</th>
+            <th style="padding:8px 10px;text-align:right;color:var(--text-dim);font-size:10px;border-bottom:1px solid var(--border)">及格率</th>
+          </tr>
+        </thead>
+        <tbody id="dDetailBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- D2: 熱力圖 -->
+  <div class="chart-card" style="margin-top:14px">
+    <div class="chart-title" style="--accent-color:var(--accent2)">
+      <div class="dot"></div>學期 × 班級 成績熱力圖 Score Heatmap
+      <span style="color:var(--text-dim);font-size:9px;margin-left:6px">— 顏色越綠分數越高，越紅越低</span>
+    </div>
+    <div id="heatmapWrap" style="overflow-x:auto;padding:4px 0"></div>
+  </div>
+
+  <!-- D1 & D3: 箱形圖 + 相關性 -->
+  <div class="chart-grid chart-grid-2" style="margin-top:14px">
+    <div class="chart-card">
+      <div class="chart-title" style="--accent-color:var(--accent3)">
+        <div class="dot"></div>學制成績分布箱形圖 Box Plot by Program
+        <span style="color:var(--text-dim);font-size:9px;margin-left:4px">— 橫線為中位數，箱為四分位距</span>
+      </div>
+      <div id="boxplotWrap" style="overflow-x:auto"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="--accent-color:var(--accent4)">
+        <div class="dot"></div>人數 vs 及格率 相關性 Correlation: Count vs Pass Rate
+      </div>
+      <div class="chart-wrap" style="height:240px">
+        <canvas id="chartCorrelation"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL L (學習行為) ══ -->
+<div class="panel" id="panelL" role="tabpanel" aria-labelledby="tab-btn-L">
+  <div class="chart-card" style="padding:16px">
+
+    <!-- Loading Overlay -->
+    <div id="tab-behavior" class="position-relative">
+      <div class="loading-overlay" id="behaviorLoadingOverlay"
+           style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;
+                  z-index:10;background:rgba(var(--surface-rgb,19,22,31),0.85);
+                  justify-content:center;align-items:center;min-height:200px">
+        <div style="text-align:center;color:var(--text-dim,#888)">
+          <div style="font-size:1.5rem;margin-bottom:8px">⏳</div>
+          <div style="font-size:0.85rem">資料載入中…</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;margin:0 0 12px;gap:8px">
+        <h5 style="margin:0;font-weight:600;flex:1">📊 學習行為分析 <span style="font-size:0.8rem;color:var(--text-dim,#888);font-weight:400">Learning Behavior</span></h5>
+        <button type="button" id="lResetBtn" class="hover-accent-btn" data-action="resetBehaviorFilters"
+                style="padding:4px 12px;border-radius:6px;border:1px solid var(--border2);
+                       background:var(--surface2);color:var(--text-dim);font-size:10px;cursor:pointer;
+                       white-space:nowrap;flex-shrink:0;transition:all 0.15s">
+          ↺ 清除條件
+        </button>
+      </div>
+      <div id="behaviorMetaStrip" style="display:none;margin:0 0 14px"></div>
+
+      <!-- 子 Tab -->
+      <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap" id="behaviorSubTabs">
+        <button type="button" class="behavior-sub-btn active" data-sub="radar"
+                data-action="behaviorSwitchSub"
+                style="padding:5px 14px;border-radius:20px;border:1px solid var(--accent,#3498db);
+                       background:var(--accent,#3498db);color:#fff;cursor:pointer;font-size:0.82rem">
+          🕸 分群雷達圖
+        </button>
+        <button type="button" class="behavior-sub-btn" data-sub="time"
+                data-action="behaviorSwitchSub"
+                style="padding:5px 14px;border-radius:20px;border:1px solid var(--accent,#3498db);
+                       background:transparent;color:var(--accent,#3498db);cursor:pointer;font-size:0.82rem">
+          🕐 時間分析
+        </button>
+        <button type="button" class="behavior-sub-btn" data-sub="correlation"
+                data-action="behaviorSwitchSub"
+                style="padding:5px 14px;border-radius:20px;border:1px solid var(--accent,#3498db);
+                       background:transparent;color:var(--accent,#3498db);cursor:pointer;font-size:0.82rem">
+          📈 相關性分析
+        </button>
+      </div>
+
+      <!-- ─── 子面板 A：雷達圖 ─── -->
+      <div id="sub-radar" class="behavior-sub-pane">
+        <!-- 控制列（篩選器）在上 -->
+        <div id="radarControls" style="margin-bottom:8px"></div>
+        <!-- 分群人數卡片在下（連動篩選器） -->
+        <div id="clusterSummaryCards" style="margin-bottom:8px"></div>
+        <!-- 雷達圖 -->
+        <div class="chart-card" style="margin-bottom:14px">
+          <div class="chart-title" style="--accent-color:var(--accent)">
+            <span class="dot"></span>學習行為分群雷達圖
+          </div>
+          <div class="chart-wrap behavior-radar-wrap">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+        <!-- 洞察與建議面板（策略 B & C）由 tab-behavior-radar.js 動態渲染 -->
+        <div id="radarInsightsPanel" style="display:none"></div>
+        <!-- 分群說明 -->
+        <div style="margin-top:16px;overflow-x:auto;-webkit-overflow-scrolling:touch">
+          <table style="width:max-content;min-width:100%;border-collapse:collapse;font-size:0.82rem">
+            <thead>
+              <tr style="background:var(--card-bg2,#f8f9fa)">
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">優先</th>
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">代碼</th>
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">名稱</th>
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">行為特徵</th>
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">量化判斷條件</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:var(--card-bg2,#f8f9fa)"><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">① 最優先</td><td style="padding:5px 10px;white-space:nowrap">P5</td><td style="padding:5px 10px;white-space:nowrap">被動低參與型</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">整體學習量極少，教材使用單一</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">總學習時間 &lt; 120 分鐘 <span style="font-weight:600;color:var(--accent,#1a73e8)">且</span> 教材多樣性分數 ≤ 2</td></tr>
+              <tr><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">②</td><td style="padding:5px 10px;white-space:nowrap">P4</td><td style="padding:5px 10px;white-space:nowrap">題庫刷題型</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">高頻次作答，學習以測驗為主</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">QUZ 作答次數 ≥ 20 次 <span style="font-weight:600;color:var(--accent,#1a73e8)">且</span> QUZ 估計時間佔總學習時間 ≥ 40%</td></tr>
+              <tr style="background:var(--card-bg2,#f8f9fa)"><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">③</td><td style="padding:5px 10px;white-space:nowrap">P2</td><td style="padding:5px 10px;white-space:nowrap">彈性聽覺型</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">偏好音頻教材，影片使用較少</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">AUD 完成率 ≥ 50% <span style="font-weight:600;color:var(--accent,#1a73e8)">且</span> VID 完成率 &lt; 50%</td></tr>
+              <tr><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">④</td><td style="padding:5px 10px;white-space:nowrap">P1</td><td style="padding:5px 10px;white-space:nowrap">影音輔導型</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">大量觀看影片或使用輔導資源</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">VID 完成率 ≥ 50% <span style="font-weight:600;color:var(--accent,#1a73e8)">或</span> TUT 投入時間 ≥ 30 分鐘（任一即符合）</td></tr>
+              <tr style="background:var(--card-bg2,#f8f9fa)"><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">⑤ 預設</td><td style="padding:5px 10px;white-space:nowrap">P3</td><td style="padding:5px 10px;white-space:nowrap">平均使用型</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">各類教材均衡使用，無明顯偏重</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">以上條件皆不符合（預設分群）</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- 雷達圖維度說明 -->
+        <div style="margin-top:12px;overflow-x:auto;-webkit-overflow-scrolling:touch">
+          <table style="width:max-content;min-width:100%;border-collapse:collapse;font-size:0.82rem">
+            <thead>
+              <tr style="background:var(--card-bg2,#f8f9fa)">
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">代碼</th>
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">項目</th>
+                <th style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--border,#e0e0e0);white-space:nowrap">含意</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:5px 10px;white-space:nowrap;font-family:'JetBrains Mono',monospace">AUD</td><td style="padding:5px 10px;white-space:nowrap">聽覺教材</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">音檔、語音講解等聽覺教材的完成情形。</td></tr>
+              <tr style="background:var(--card-bg2,#f8f9fa)"><td style="padding:5px 10px;white-space:nowrap;font-family:'JetBrains Mono',monospace">VID</td><td style="padding:5px 10px;white-space:nowrap">影音教材</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">教學影片、EverCam 等影音教材的完成情形。</td></tr>
+              <tr><td style="padding:5px 10px;white-space:nowrap;font-family:'JetBrains Mono',monospace">TXT</td><td style="padding:5px 10px;white-space:nowrap">文字教材</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">講義、參考教材、延伸閱讀等文字資源的完成情形。</td></tr>
+              <tr style="background:var(--card-bg2,#f8f9fa)"><td style="padding:5px 10px;white-space:nowrap;font-family:'JetBrains Mono',monospace">SUP</td><td style="padding:5px 10px;white-space:nowrap">補充筆記</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">補充教材、整理筆記、學習單、動畫解析等支援資源的完成情形。</td></tr>
+              <tr><td style="padding:5px 10px;white-space:nowrap;font-family:'JetBrains Mono',monospace">TUT</td><td style="padding:5px 10px;white-space:nowrap">輔導資源</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">課輔、解題、重點複習等輔導類資源的使用情形。</td></tr>
+              <tr style="background:var(--card-bg2,#f8f9fa)"><td style="padding:5px 10px;white-space:nowrap;font-family:'JetBrains Mono',monospace">QUZ</td><td style="padding:5px 10px;white-space:nowrap">題庫測驗</td><td style="padding:5px 10px;white-space:nowrap;color:var(--text-dim,#888)">題庫、測驗、練習題等作答或完成情形。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /sub-radar -->
+
+      <!-- ─── 子面板 B：相關性 ─── -->
+      <div id="sub-correlation" class="behavior-sub-pane" style="display:none">
+        <p style="font-size:0.82rem;color:var(--text-dim,#888);margin-bottom:12px">
+          Pearson 相關係數：點擊儲存格查看散佈圖。|r| ≥ 0.3 視為值得關注。
+        </p>
+        <div id="tab-correlation"></div>
+        <div id="corrHeatmap" style="margin-bottom:12px"></div>
+        <div id="scatterSection">
+          <div class="chart-card">
+            <div class="chart-title" style="--accent-color:var(--accent2)">
+              <span class="dot"></span>行為指標相關性散佈圖
+            </div>
+            <div class="chart-wrap" style="height:300px;position:relative">
+              <canvas id="scatterChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div><!-- /sub-correlation -->
+
+      <!-- ─── 子面板 C：時間分析 (v2.1) ─── -->
+      <div id="sub-time" class="behavior-sub-pane" style="display:none">
+
+        <!-- 篩選器列（由 tab-behavior-time.js 動態注入） -->
+        <div id="tab-time"></div>
+
+        <!-- ① AI 智慧洞察文字框 (新增) -->
+        <div id="aiInsightBadge"></div>
+
+        <!-- ② 各週題庫作答強度（原有，保留） -->
+        <div class="chart-card" style="margin-bottom:14px">
+          <div class="chart-title" style="--accent-color:var(--accent)">
+            <span class="dot"></span>各週題庫作答強度
+            <button type="button" class="chart-info-btn" data-info="weeklyQuiz">ℹ</button>
+            <div class="chart-popover" id="info-weeklyQuiz">
+              <div class="chart-popover-title">各週題庫作答強度
+                <button type="button" class="chart-popover-close" data-action="closePopover">×</button>
+              </div>
+              X 軸為第 1–18 週，Y 軸左側為平均作答次數與作答人數，右側為題庫及格率。
+              紅色垂直線標示期中（W9）及期末（W18）考週，用於觀察考前是否有學習高峰。
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:240px;position:relative">
+            <canvas id="weeklyQuizChart"></canvas>
+          </div>
+        </div>
+
+        <!-- ③ 平時及考前學習強度 ＋ 學習時段分布（原有，保留） -->
+        <div class="behavior-time-grid">
+          <div class="chart-card">
+            <div class="chart-title" style="--accent-color:var(--accent3)">
+              <span class="dot"></span>平時及考前學習強度
+              <button type="button" class="chart-info-btn" data-info="preExam">ℹ</button>
+              <div class="chart-popover" id="info-preExam">
+                <div class="chart-popover-title">平時及考前學習強度
+                  <button type="button" class="chart-popover-close" data-action="closePopover">×</button>
+                </div>
+                依學習行為將學生分為四型：<br>
+                <span class="popover-tag" style="background:rgba(158,158,158,.25)">低投入</span>總學習量偏低<br>
+                <span class="popover-tag" style="background:rgba(255,82,82,.25)">高度衝刺</span>考前7天佔30%以上<br>
+                <span class="popover-tag" style="background:rgba(76,175,80,.25)">規律分散</span>考前比例10–30%<br>
+                <span class="popover-tag" style="background:rgba(33,150,243,.25)">提早完成</span>考前比例低於10%
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:300px;position:relative">
+              <canvas id="preExamChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title" style="--accent-color:var(--accent4)">
+              <span class="dot"></span>學習時段分布
+              <button type="button" class="chart-info-btn" data-info="timeSlot">ℹ</button>
+              <div class="chart-popover" id="info-timeSlot">
+                <div class="chart-popover-title">學習時段分布
+                  <button type="button" class="chart-popover-close" data-action="closePopover">×</button>
+                </div>
+                將全日分為四時段，顯示學生的平均學習時間分布比例。<br>
+                深夜（23:00–06:00）比例偏高時，AI 洞察框會自動提示。
+              </div>
+            </div>
+            <div class="chart-wrap behavior-time-slot-wrap">
+              <canvas id="timeSlotChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- ④ 學習規律熱力圖（新增） -->
+        <div class="chart-card" style="margin-top:14px">
+          <div class="chart-title" style="--accent-color:var(--accent2)">
+            <span class="dot"></span>學習規律熱力圖
+            <span style="color:var(--text-dim);font-size:9px;margin-left:6px">— X 軸：0–23 時；Y 軸：週一至週日</span>
+            <button type="button" class="chart-info-btn" data-info="studyHeatmap">ℹ</button>
+            <button type="button" class="chart-expand-btn" data-target="studyHeatmapWrap">⤢</button>
+            <div class="chart-popover" id="info-studyHeatmap">
+              <div class="chart-popover-title">學習規律熱力圖
+                <button type="button" class="chart-popover-close" data-action="closePopover">×</button>
+              </div>
+              顯示一週七天 × 24 小時的學習密集度分布。顏色越深橙代表該時段累計學習分鐘數越高。
+              可協助識別學生是否有規律的學習節奏（Spaced Practice），或集中於特定時段（Massed Practice）。
+              <br><br>學術依據：Knight et al. (2017), Tabuenca et al. (2015)
+            </div>
+          </div>
+          <div id="studyHeatmapWrap" style="padding:6px 0;min-height:180px"></div>
+        </div>
+
+        <!-- ⑤ 24小時學習趨勢折線圖（新增） -->
+        <div class="chart-card" style="margin-top:14px;margin-bottom:14px">
+          <div class="chart-title" style="--accent-color:var(--accent3)">
+            <span class="dot"></span>24 小時學習活躍度趨勢
+            <span style="color:var(--text-dim);font-size:9px;margin-left:6px">— 含分群對比疊加</span>
+            <button type="button" class="chart-info-btn" data-info="hourlyLine">ℹ</button>
+            <button type="button" class="chart-expand-btn" data-target="hourlyLineWrap">⤢</button>
+            <div class="chart-popover" id="info-hourlyLine">
+              <div class="chart-popover-title">24 小時學習活躍度趨勢
+                <button type="button" class="chart-popover-close" data-action="closePopover">×</button>
+              </div>
+              X 軸為一天 24 小時，Y 軸為正規化學習活躍度（各組加總後歸一化，方便跨組比較）。<br><br>
+              <b>線條說明：</b><br>
+              <span class="popover-tag" style="background:rgba(52,152,219,.25)">藍色實線</span>全班平均<br>
+              <span class="popover-tag" style="background:rgba(46,204,113,.25)">綠色虛線</span>前 25% 高分群<br>
+              <span class="popover-tag" style="background:rgba(241,196,15,.25)">黃色點線</span>及格群<br>
+              <span class="popover-tag" style="background:rgba(231,76,60,.25)">紅色點線</span>不及格群<br><br>
+              篩選器啟用時，分群疊加線暫不顯示（避免邏輯衝突）。<br>
+              學術依據：Knight et al. (2017)
+            </div>
+          </div>
+          <div id="hourlyLineWrap" class="chart-wrap" style="height:260px;position:relative">
+            <canvas id="hourlyLineChart"></canvas>
+          </div>
+        </div>
+
+      </div><!-- /sub-time -->
+
+    </div><!-- /#tab-behavior -->
+
+    <!-- 無資料提示（ETL 尚未執行時顯示）-->
+    <div id="behaviorNoData" style="display:none;text-align:center;padding:40px 20px;color:var(--text-dim,#888)">
+      <div style="font-size:2rem;margin-bottom:8px">📭</div>
+      <div style="font-size:0.9rem">尚無學習行為資料。<br>請先執行 <code>python lms_etl.py</code> 產出 JSON 後重新載入。</div>
+    </div>
+
+  </div>
+</div><!-- /panelL -->
+
+<!-- ══ PANEL R (高風險報告) ══ -->
+<div class="panel" id="panelR" role="tabpanel" aria-labelledby="tab-btn-R">
+  <!-- 載入中狀態 -->
+  <div id="rLoading" style="text-align:center;padding:60px 20px;color:var(--text-dim,#888)">
+    <div style="font-size:2rem;margin-bottom:8px">⏳</div>
+    <div style="font-size:0.9rem">載入高風險分析報告中…</div>
+  </div>
+  <!-- 無資料狀態 -->
+  <div id="rNoData" style="display:none;text-align:center;padding:60px 20px;color:var(--text-dim,#888)">
+    <div style="font-size:2rem;margin-bottom:8px">📭</div>
+    <div id="rNoDataMsg" style="font-size:0.9rem">尚無高風險報告資料。<br>請先執行 <code>python lms_etl.py</code>（含成績資料）後重新載入。</div>
+  </div>
+  <!-- 報告主體（資料載入後顯示） -->
+  <div id="rContent" style="display:none">
+
+    <!-- §5.1 學期篩選器（schema 3.0+，僅含行為資料學期） -->
+    <div id="rSemesterFilter" style="display:none;align-items:center;gap:8px;
+         padding:10px 14px;background:var(--card-bg,#fff);border:1px solid var(--border,#e0e0e0);
+         border-radius:10px;margin-bottom:12px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:600;color:var(--text-dim,#888);white-space:nowrap">學期</span>
+      <div id="rSemesterBtns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+
+    <!-- §5.2 班級概況卡片 -->
+    <div id="rCohortSummary" style="display:flex;gap:12px;flex-wrap:wrap;padding:16px 0 8px"></div>
+
+    <!-- §5.3 六維度雷達圖 -->
+    <div style="margin:16px 0;position:relative">
+      <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;
+                 display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative">
+        <span>學習特徵雷達圖</span>
+        <span style="font-size:11px;font-weight:400;color:var(--text-dim)">（正規化 0–100，全體學生為基準）</span>
+        <!-- 雷達圖說明按鈕 -->
+        <button type="button" class="chart-info-btn" id="rRadarInfoBtn"
+          data-action="toggleRRadarInfo"
+          title="查看雷達圖說明">?</button>
+        <!-- 雷達圖說明 Popover -->
+        <div class="chart-popover" id="rRadarInfoPanel" style="width:360px;left:0;top:calc(100% + 6px)">
+          <div class="chart-popover-title">📡 學習特徵雷達圖 — 分析原則
+            <button type="button" class="chart-popover-close" data-action="closePanelOpen" data-target="rRadarInfoPanel">×</button>
+          </div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.8">
+            <strong style="color:var(--accent)">【圖表用途】</strong><br>
+            比較「及格組」與「不及格組」學生在六個學習行為維度上的差異，幫助識別哪些行為與考試通過率有關。<br><br>
+            <strong style="color:var(--accent)">【六個維度說明】</strong>
+            <ul style="margin:4px 0 8px 0;padding-left:16px;color:var(--text-mid);font-size:11px">
+              <li><b>TXT 教材完成率</b>：講義、文字閱讀材料的完成比例</li>
+              <li><b>SUP 解鎖教材</b>：需達門檻才能解鎖的補充教材（如整理筆記、動畫解析）完成比例</li>
+              <li><b>TUT 輔導資源</b>：課輔、解題影片等輔導類資源的使用程度</li>
+              <li><b>考前學習強度</b>：期末考前 7 天內的學習量佔整學期總量的比例</li>
+              <li><b>學習穩定性</b>：每週是否持續有學習活動（零活動週越少，穩定性分數越高）</li>
+              <li><b>AUD 音頻時數</b>：音檔、語音講解等聽覺教材的累積使用時間</li>
+            </ul>
+            <strong style="color:var(--accent)">【數值如何計算？】</strong><br>
+            每個維度取「該組學生的中位數原始值」，再以全體學生中位數為基準做<b>正規化</b>，換算到 0–100 的分數：
+            <ul style="margin:4px 0 8px 0;padding-left:16px;color:var(--text-mid);font-size:11px">
+              <li>100 分 = 表現等同全體中位數的 2 倍（最高值）</li>
+              <li>50 分 = 表現等同全體中位數（平均水準）</li>
+              <li>0 分 = 幾乎未使用該資源</li>
+            </ul>
+            <strong style="color:var(--accent)">【如何讀圖？】</strong><br>
+            • <span style="color:#27ae60;font-weight:600">綠色區域（及格組）</span>越大，代表及格學生在該維度投入越多。<br>
+            • <span style="color:#e74c3c;font-weight:600">紅色區域（不及格組）</span>縮小的維度，就是不及格學生明顯不足的行為。<br>
+            • 兩組差距越大的維度，越值得課程設計介入或預警干預。<br><br>
+            <span style="color:var(--text-dim);font-size:11px">點擊上方「不及格人數」或「及格人數」卡片，可單獨聚焦顯示該組雷達線。</span>
+          </div>
+        </div>
+        <button type="button" id="rRadarClearBtn" data-action="atRiskFilterRadar"
+          style="display:none;margin-left:auto;font-size:11px;padding:2px 10px;
+                 border:1px solid var(--border,#ccc);border-radius:20px;
+                 background:var(--card-bg,#fff);color:var(--text-dim,#888);
+                 cursor:pointer;white-space:nowrap">✕ 顯示全部</button>
+      </h3>
+      <div style="max-width:480px;margin:0 auto;position:relative;height:360px">
+        <canvas id="rRadarChart"></canvas>
+      </div>
+    </div>
+
+    <!-- §5.4 時序折線圖 -->
+    <div id="rTemporalSection" style="margin:16px 0;display:none">
+      <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">
+        週學習活動量時序比較
+        <span style="font-size:11px;font-weight:400;color:var(--text-dim)">（各週平均分鐘數）</span>
+      </h3>
+      <canvas id="rTemporalChart" height="220"></canvas>
+    </div>
+
+    <!-- §5.5 紅旗警示卡 -->
+    <div id="rRedFlags" style="margin:16px 0"></div>
+
+    <!-- §5.6 處方性建議 -->
+    <div id="rPrescriptions" style="margin:16px 0"></div>
+
+    <!-- 匯出按鈕（§6.2） -->
+    <div style="padding:16px 0 32px;text-align:right">
+      <button type="button" data-action="exportAtRiskPDF"
+        style="padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer">
+        ⬇ 匯出 PDF 報告
+      </button>
+    </div>
+
+  </div><!-- /rContent -->
+</div><!-- /panelR -->
+
+<!-- ══ PANEL P (列印) ══ -->
+<div class="panel" id="panelP" role="tabpanel" aria-labelledby="tab-btn-P">
+  <div style="padding:16px 0 8px">
+    <h2 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px">🖨 預覽列印 Print Preview</h2>
+
+    <!-- 選擇要列印的圖表 -->
+    <div class="print-selection-box">
+      <div class="print-selection-title">選擇列印項目</div>
+      <div class="print-options">
+        <span class="filter-label">輸出年份 From</span>
+        <select id="printYearStart"></select>
+        <span class="filter-label">到 To</span>
+        <select id="printYearEnd"></select>
+      </div>
+      <div id="printSelections" class="print-group"></div>
+      <div id="printSummary" class="print-summary"></div>
+    </div>
+
+    <!-- 預覽列印按鈕 -->
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <button type="button" data-action="doPrintPreview" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">預覽列印</button>
+      <button type="button" data-action="doPrint" style="background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">直接列印 / 另存 PDF</button>
+    </div>
+
+    <!-- 預覽區域 (橫向可滑動) -->
+    <div id="printPreviewArea" style="display:none;overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:#fff;color:#000;padding:20px;min-height:200px">
+      <div id="printPreviewContent" style="min-width:900px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 主應用邏輯（依賴 filter-engine.js 與 CDN Chart.js） -->
+<script defer src="js/main.js"></script>
+
+<!-- ══ 學習行為模組（依賴 main.js 全域變數）══ -->
+<script defer src="js/chart-registry.js?v=20260521"></script>
+<script defer src="js/behavior-loader.js?v=20260521"></script>
+<script defer src="js/tab-behavior-radar.js?v=20260521"></script>
+<script defer src="js/tab-behavior-correlation.js?v=20260521"></script>
+<script defer src="js/tab-behavior-time.js?v=20260521"></script>
+
+<!-- ══ 行為初始化 + 高風險報告（依賴 behavior 模組）══ -->
+<script defer src="js/behavior-init.js?v=20260521"></script>
+<script defer src="js/at-risk-report.js?v=20260521"></script>
+</body>
+</html>
