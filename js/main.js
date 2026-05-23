@@ -3769,36 +3769,46 @@ if (isIOS && isSafari && !isStandalone) {
 // PRINT PANEL
 // ══════════════════════════════════════════════════════════
 const PRINT_ITEMS = [
+  // ── Panel D：整屆分析 ──
   { id: 'chartCohortTrend',      label: '整屆跨學期趨勢',           tab: 'D', type: 'canvas', checked: true },
   { id: 'chartProgramBar',       label: '各學期學制比較',           tab: 'D', type: 'canvas', checked: true },
   { id: 'chartPassRate',         label: '及格率比較',               tab: 'D', type: 'canvas', checked: true },
+  { id: 'chartPassRateRange',    label: '及格率趨勢折線',           tab: 'D', type: 'canvas', checked: false },
   { id: 'heatmapWrap',           label: '學期 × 班級成績熱力圖',     tab: 'D', type: 'svg',    checked: true },
   { id: 'boxplotWrap',           label: '學制成績分布箱形圖',       tab: 'D', type: 'svg',    checked: true },
   { id: 'chartCorrelation',      label: '人數 vs 及格率相關性',      tab: 'D', type: 'canvas', checked: false },
+  // ── Panel A：班級分析 ──
   { id: 'chartDist',             label: '成績分布直方圖',           tab: 'A', type: 'canvas', checked: false },
   { id: 'chartMidFinal',         label: '期中/期末指標對比',         tab: 'A', type: 'canvas', checked: false },
   { id: 'chartTrend',            label: '班級跨屆趨勢',             tab: 'A', type: 'canvas', checked: false },
   { id: 'chartNormalOverlay',    label: '常態分布曲線疊加',         tab: 'A', type: 'canvas', checked: false },
   { id: 'chartRegression',       label: '期中 → 期末線性迴歸',       tab: 'A', type: 'canvas', checked: false },
   { id: 'chartVariance',         label: '與前次同班比較 Δ',          tab: 'A', type: 'canvas', checked: false },
+  // ── Panel C：個案 / 重修 ──
+  // cChartDist：個案成績分布（canvas，由 renderCAnomalyAndDist 繪製）
+  { id: 'cChartDist',            label: '個案成績分布',             tab: 'C', type: 'canvas', checked: false },
   { id: 'chartAnomalyDensity',   label: '異常事件密度',             tab: 'C', type: 'canvas', checked: false },
   { id: 'chartRetakerFirstDist', label: '重修生首修成績分布',       tab: 'C', type: 'canvas', checked: false },
-  { id: 'slopeChart',            label: '首修 → 重修進退步坡度圖',   tab: 'B', type: 'svg',    checked: false },
-  { id: 'chartDelta',            label: '重修 Δ 分布',              tab: 'B', type: 'canvas', checked: false },
-  { id: 'chartDeltaByProgram',   label: '重修改善率依學制',         tab: 'B', type: 'canvas', checked: false },
-  { id: 'chartRetakeCount',      label: '重修次數分布',             tab: 'B', type: 'canvas', checked: false },
-  { id: 'chartFirstVsDelta',     label: '首修成績 vs 重修進步',     tab: 'B', type: 'canvas', checked: false },
+  { id: 'slopeChart',            label: '首修 → 重修進退步坡度圖',   tab: 'C', type: 'svg',    checked: false },
+  { id: 'chartDelta',            label: '重修 Δ 分布',              tab: 'C', type: 'canvas', checked: false },
+  { id: 'chartQuadrant',         label: '正課 × 實驗四象限',         tab: 'C', type: 'canvas', checked: false },
+  { id: 'chartDeltaByProgram',   label: '重修改善率依學制',         tab: 'C', type: 'canvas', checked: false },
+  { id: 'chartRetakeCount',      label: '重修次數分布',             tab: 'C', type: 'canvas', checked: false },
+  { id: 'chartFirstVsDelta',     label: '首修成績 vs 重修進步',     tab: 'C', type: 'canvas', checked: false },
+  // ── Panel L：學習行為 ──
   { id: 'radarChart',            label: '學習行為分群雷達圖',       tab: 'L', type: 'canvas', checked: false },
-  { id: 'corrHeatmap',           label: '行為指標相關性熱力圖',     tab: 'L', type: 'div',    checked: false },
-  { id: 'scatterSection',        label: '行為相關性散佈圖',         tab: 'L', type: 'div',    checked: false },
+  // corrHeatmap 為 HTML table，無法截圖；改為擷取 scatterChart canvas
+  { id: 'scatterChart',          label: '行為相關性散佈圖',         tab: 'L', type: 'canvas', checked: false },
   { id: 'weeklyQuizChart',       label: '各週題庫作答強度',         tab: 'L', type: 'canvas', checked: false },
   { id: 'preExamChart',          label: '平時及考前學習強度',       tab: 'L', type: 'canvas', checked: false },
   { id: 'timeSlotChart',         label: '學習時段分布',             tab: 'L', type: 'canvas', checked: false },
-  { id: 'studyHeatmapWrap',     label: '學習規律熱力圖',           tab: 'L', type: 'div',    checked: false },
-  { id: 'hourlyLineWrap',       label: '24小時學習活躍度趨勢',     tab: 'L', type: 'div',    checked: false },
+  // studyHeatmapWrap 為 SVG 渲染進 div，使用 svg type 取得 getPrintableSvgHtml
+  { id: 'studyHeatmapWrap',      label: '學習規律熱力圖',           tab: 'L', type: 'svg',    checked: false },
+  // hourlyLineWrap 為 div 包 canvas，直接指向 canvas id
+  { id: 'hourlyLineChart',       label: '24小時學習活躍度趨勢',     tab: 'L', type: 'canvas', checked: false },
 ];
 
-const PRINT_TAB_LABELS = { D: '整屆', A: '班級', C: '個案', B: '重修', L: '學習行為' };
+const PRINT_TAB_LABELS = { D: '整屆', A: '班級', C: '個案 / 重修', L: '學習行為' };
 
 function printYears() {
   if (!DATA?.meta?.semesters?.length) return [];
@@ -3966,19 +3976,25 @@ function renderPrintCharts() {
   if (!DATA) return;
   renderD();
   renderA();
+  // renderB 已包含 renderSlope/renderDelta/renderQuadrant/renderDeltaByProgram/renderRetakeCount/renderFirstVsDelta
   renderB();
-  renderAnomalyDensity();
+  // renderCAnomalyAndDist 繪製 chartAnomalyDensity + cChartDist
+  renderCAnomalyAndDist();
   renderRetakerFirstDist();
+  // 強制所有已登記圖表 resize，確保 hidden panel 內的 canvas 有正確尺寸
   Object.values(charts).forEach(chart => {
-    chart.resize();
-    chart.update('none');
+    try { chart.resize(); chart.update('none'); } catch(e) {}
   });
-  ['radarChart', 'weeklyQuizChart', 'preExamChart', 'timeSlotChart'].forEach(id => {
-    if (charts[id]) return;
+  // 補足由外部模組（behavior tabs / ChartRegistry）管理、未在 charts{} map 中的圖表
+  // 優先使用 ChartRegistry.list() 涵蓋所有已登記實例
+  const registryIds = (typeof ChartRegistry !== 'undefined') ? ChartRegistry.list() : [];
+  const behaviorIds = ['radarChart', 'weeklyQuizChart', 'preExamChart', 'timeSlotChart', 'scatterChart', 'hourlyLineChart'];
+  const externalIds = [...new Set([...registryIds, ...behaviorIds])].filter(id => !charts[id]);
+  externalIds.forEach(id => {
     const canvas = document.getElementById(id);
     if (!canvas) return;
-    const instance = Chart.getChart(canvas);
-    if (instance) { instance.resize(); instance.update('none'); }
+    const instance = typeof Chart !== 'undefined' && Chart.getChart(canvas);
+    if (instance) { try { instance.resize(); instance.update('none'); } catch(e) {} }
   });
 }
 
@@ -3988,20 +4004,68 @@ function getPrintableSvgHtml(item) {
   const svg = el.tagName?.toLowerCase() === 'svg' ? el : el.querySelector('svg');
   if (!svg) return '';
   const copy = svg.cloneNode(true);
+  // 若無 viewBox，從 width/height 屬性補全，確保縮放不裁切
+  if (!copy.getAttribute('viewBox')) {
+    const w = parseFloat(svg.getAttribute('width') || svg.getBoundingClientRect().width) || 800;
+    const h = parseFloat(svg.getAttribute('height') || svg.getBoundingClientRect().height) || 400;
+    copy.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  }
   copy.removeAttribute('width');
   copy.removeAttribute('height');
   copy.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  copy.style.width = '100%';
+  copy.style.height = 'auto';
+  copy.style.display = 'block';
   return copy.outerHTML;
+}
+
+function captureCanvasAtSize(canvas, targetW, targetH) {
+  // 優先從 charts{} map 取，再查 Chart.js 全域 registry（涵蓋 ChartRegistry 模組）
+  const chart = charts[canvas.id] || (typeof Chart !== 'undefined' && Chart.getChart(canvas));
+  // 儲存原始 CSS style（Chart.resize 修改的是 CSS，非 canvas.width/height 屬性）
+  const origStyleW = canvas.style.width;
+  const origStyleH = canvas.style.height;
+  try {
+    if (chart) {
+      chart.stop();
+      chart.resize(targetW, targetH);
+      chart.update('none');
+    }
+    // 若 canvas 完全空白（未初始化）則回傳 null，由呼叫端顯示提示
+    const dataUrl = canvas.toDataURL('image/png');
+    // 偵測純白/純透明空白 canvas（未初始化的圖表）
+    const isBlank = (() => {
+      try {
+        const ctx2 = canvas.getContext('2d');
+        if (!ctx2) return false;
+        const px = ctx2.getImageData(0, 0, Math.min(canvas.width, 4), Math.min(canvas.height, 4)).data;
+        // 若所有像素 alpha=0 或 rgb 全為 255（純白）則視為空白
+        for (let i = 0; i < px.length; i += 4) {
+          if (px[i+3] > 0 && !(px[i] === 255 && px[i+1] === 255 && px[i+2] === 255)) return false;
+        }
+        return true;
+      } catch(e) { return false; }
+    })();
+    return isBlank ? null : dataUrl;
+  } finally {
+    if (chart) {
+      // 用 CSS style 復原（與 resize 對應），再讓 Chart.js 依容器重新自適應
+      canvas.style.width = origStyleW;
+      canvas.style.height = origStyleH;
+      chart.resize();
+      chart.update('none');
+    }
+  }
 }
 
 function getPrintableItemHTML(item) {
   const title = `<div class="print-card-title">${escapeHtml(item.label)}</div>`;
   const empty = `<div style="color:#777;font-size:12px;padding:18px 0">此項目目前沒有可列印圖表</div>`;
+  const figImg = (dataUrl, label) =>
+    `<div class="print-figure"><img src="${dataUrl}" alt="${escapeHtml(label)}" style="width:100%;height:auto;max-width:100%;display:block;" /></div>`;
   if (item.type === 'svg') {
     const svgHtml = getPrintableSvgHtml(item);
-    return title + (svgHtml
-      ? `<div class="print-figure">${svgHtml}</div>`
-      : empty);
+    return title + (svgHtml ? `<div class="print-figure">${svgHtml}</div>` : empty);
   }
   if (item.type === 'div') {
     const container = document.getElementById(item.id);
@@ -4009,8 +4073,9 @@ function getPrintableItemHTML(item) {
     const innerCanvas = container.querySelector('canvas');
     if (innerCanvas) {
       try {
-        const dataUrl = innerCanvas.toDataURL('image/png');
-        return title + `<div class="print-figure"><img src="${dataUrl}" alt="${escapeHtml(item.label)}" /></div>`;
+        const dataUrl = captureCanvasAtSize(innerCanvas, 800, 380);
+        if (dataUrl) return title + figImg(dataUrl, item.label);
+        return title + `<div style="color:#777;font-size:12px;padding:18px 0">⚠ 圖表未初始化，請先切換至對應頁籤後再預覽列印</div>`;
       } catch(e) { }
     }
     const svgHtml = getPrintableSvgHtml(item);
@@ -4020,19 +4085,11 @@ function getPrintableItemHTML(item) {
   const canvas = document.getElementById(item.id);
   if (!canvas) return title + empty;
   try {
-    const chart = charts[item.id] || (typeof Chart !== 'undefined' && Chart.getChart(canvas));
-    if (chart) {
-      const config = chartConfigs[item.id];
-      if (config && charts[item.id]) prepareScrollableChart(canvas, config);
-      chart.stop();
-      chart.resize();
-      chart.update('none');
-      chart.render();
-    }
-    const dataUrl = canvas.toDataURL('image/png');
-    return title + `<div class="print-figure"><img src="${dataUrl}" alt="${escapeHtml(item.label)}" /></div>`;
+    const dataUrl = captureCanvasAtSize(canvas, 800, 380);
+    if (!dataUrl) return title + `<div style="color:#777;font-size:12px;padding:18px 0">⚠ 圖表未初始化，請先切換至對應頁籤後再預覽列印</div>`;
+    return title + figImg(dataUrl, item.label);
   } catch(e) {
-    return title + `<div style="color:#777;font-size:12px;padding:18px 0">圖表無法擷取</div>`;
+    return title + `<div style="color:#777;font-size:12px;padding:18px 0">⚠ 圖表擷取失敗（${escapeHtml(String(e?.message||e))}）</div>`;
   }
 }
 
@@ -4052,10 +4109,11 @@ function buildPrintHTML(items) {
   let html = `<style>
     .print-report { font-family:sans-serif;background:#fff;color:#000;padding:20px; }
     .print-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start; }
-    .print-card { break-inside:avoid;border:1px solid #ddd;border-radius:8px;padding:12px;height:335px;display:flex;flex-direction:column;overflow:hidden;background:#fff; }
-    .print-card-title { font-size:12px;font-weight:600;color:#444;margin-bottom:8px;flex:0 0 auto; }
-    .print-figure { flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden; }
-    .print-figure img, .print-figure svg { width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;display:block; }
+    .print-card { break-inside:avoid;border:1px solid #ddd;border-radius:8px;padding:12px;background:#fff;margin-bottom:4px; }
+    .print-card-title { font-size:12px;font-weight:600;color:#444;margin-bottom:8px; }
+    .print-figure { width:100%;overflow:visible; }
+    .print-figure img { width:100%;height:auto;max-width:100%;display:block;object-fit:contain; }
+    .print-figure svg { width:100%;height:auto;max-width:100%;display:block; }
     @media print { .print-card { page-break-inside:avoid; } }
   </style><div class="print-report">
     <div style="border-bottom:2px solid #333;padding-bottom:10px;margin-bottom:20px">
