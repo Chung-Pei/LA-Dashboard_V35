@@ -2270,24 +2270,35 @@ function renderProfile(sid) {
   const theory    = sorted.filter(r => r.type === 'theory');
   const practicum = sorted.filter(r => r.type === 'practicum');
 
+  // 建立共用 labels（所有學期×班別的完整時間軸，依 sorted 順序）
+  const allLabels = sorted.map(r => semLabel(r.semester) + ' ' + r.sheet_name);
+
   const datasets = [];
-  if (theory.length > 0) datasets.push({
-    label: '正課 Theory',
-    data: theory.map(r => ({ x: semLabel(r.semester)+' '+r.sheet_name, y: r.semester_score })),
-    borderColor: '#4f8ef7', pointRadius: 5, tension: 0.3, fill: false,
-  });
-  if (practicum.length > 0) datasets.push({
-    label: '實驗 Practicum',
-    data: practicum.map(r => ({ x: semLabel(r.semester)+' '+r.sheet_name, y: r.semester_score })),
-    borderColor: '#64d4a8', pointRadius: 5, tension: 0.3, fill: false,
-  });
+  if (theory.length > 0) {
+    // 將 theory 資料對應到全域 labels 位置，缺漏補 null
+    const theoryMap = new Map(theory.map(r => [semLabel(r.semester) + ' ' + r.sheet_name, r.semester_score]));
+    datasets.push({
+      label: '正課 Theory',
+      data: allLabels.map(lbl => theoryMap.has(lbl) ? theoryMap.get(lbl) : null),
+      borderColor: '#4f8ef7', pointRadius: 5, tension: 0.3, fill: false,
+      spanGaps: false,
+    });
+  }
+  if (practicum.length > 0) {
+    const practicumMap = new Map(practicum.map(r => [semLabel(r.semester) + ' ' + r.sheet_name, r.semester_score]));
+    datasets.push({
+      label: '實驗 Practicum',
+      data: allLabels.map(lbl => practicumMap.has(lbl) ? practicumMap.get(lbl) : null),
+      borderColor: '#64d4a8', pointRadius: 5, tension: 0.3, fill: false,
+      spanGaps: false,
+    });
+  }
 
   mkChart('chartProfile', {
     type: 'line',
-    data: { datasets },
+    data: { labels: allLabels, datasets },
     options: {
       ...CHART_DEFAULTS,
-      parsing: false,
       scales: {
         x: { type: 'category', ticks: { color: '#6b748f', font: { size: 9 } }, grid: { color: '#1c2030' } },
         y: { ...CHART_DEFAULTS.scales.y, min: 0, max: 100 }
@@ -2692,7 +2703,7 @@ function renderHeatmap(filtered) {
     return `rgb(${r},${g},${b})`;
   }
   const textCol=isDark?'#dde3f5':'#1a1d2e';
-  const dimCol=isDark?'#6b748f':'#6b748f';
+  const dimCol='#6b748f';
   const bgCol=isDark?'#13161f':'#ffffff';
 
   let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" style="display:block">`;
@@ -3466,7 +3477,7 @@ function renderD() {
   if (dView === 'merge') {
     renderDTrendMerge(filtered, sems, allClasses);
   } else {
-    renderDTrendClass(filtered, sems);
+    renderDTrendClass(filtered, sems, allClasses);
   }
 
   if (dSemMode === 'multi') {
@@ -3561,7 +3572,7 @@ function renderDTrendMerge(filtered, sems, allClasses) {
   });
 }
 
-function renderDTrendClass(filtered, sems) {
+function renderDTrendClass(filtered, sems, allClasses) {
   const classes = sortSheetNames([...new Set(filtered.map(c => c.sheet_name))]);
   const MAX_LINES = 18;
 
