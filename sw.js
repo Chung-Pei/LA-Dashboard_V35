@@ -1,11 +1,13 @@
 // ══════════════════════════════════════════════════════════
 // sw.js — 學習數據分析儀表板 Service Worker
 // 策略：App Shell (Cache First) + data/*.json (Network First)
-// 更新：2026-05-23 同步 index.html 新增模組與 icon
+//       帶 ?v= 版本參數的 JS → Cache First（版本號即 cache key）
+//       index.html → Stale-While-Revalidate（快取先回、背景更新）
+// 更新：2026-05-24 效能優化：JS 模組改 Cache First
 // ══════════════════════════════════════════════════════════
 
-const CACHE_VERSION = 'la-dash-v6-20260523a';
-const DATA_CACHE    = 'la-dash-data-v6-20260523a';
+const CACHE_VERSION = 'la-dash-v6-20260524a';
+const DATA_CACHE    = 'la-dash-data-v6-20260524a';
 
 // App Shell：靜態資源，安裝時全部快取
 // ⚠ CDN 資源釘定版本號，確保快取與 HTML 引用一致
@@ -77,9 +79,9 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // HTML 導覽頁優先取新版，避免舊 App Shell 卡住
+  // HTML 導覽頁 → Stale-While-Revalidate（先吐快取、背景更新，消除白屏等待）
   if (request.mode === 'navigate' || url.pathname.endsWith('.html')) {
-    event.respondWith(networkFirst(request));
+    event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
@@ -89,7 +91,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Chart.js CDN → Cache First（版本已釘定，與 APP_SHELL 一致）
+  // Chart.js CDN → Cache First（版本已釘定）
   if (url.href === CHARTJS_URL) {
     event.respondWith(cacheFirst(request));
     return;
@@ -101,7 +103,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // js/vendor/* → Cache First（本地化版本釘定，不需每次重新下載）
+  // js/vendor/* → Cache First（本地化版本釘定）
   if (url.pathname.includes('/js/vendor/')) {
     event.respondWith(cacheFirst(request));
     return;
@@ -113,9 +115,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // JS（含帶 ?v= 版本參數的模組）→ Network First，避免更新後被舊快取卡住
+  // ★ 帶 ?v= 版本參數的 JS → Cache First（版本號已確保唯一性，無需網路驗證）
+  if (url.pathname.endsWith('.js') && url.search.includes('v=')) {
+    event.respondWith(cacheFirst(request));
+    return;
+  }
+
+  // 其他 JS（無版本參數，如 main.js、filter-engine.js）→ Stale-While-Revalidate
   if (url.pathname.endsWith('.js')) {
-    event.respondWith(networkFirst(request));
+    event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
@@ -147,6 +155,24 @@ async function cacheFirst(request) {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   }
+}
+
+// ── Stale-While-Revalidate 策略 ──────────────────────────
+// 立即回傳快取（消除白屏），同時背景更新快取
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(CACHE_VERSION);
+  const cached = await cache.match(request);
+
+  // 背景更新（不阻塞回應）
+  const fetchPromise = fetch(request).then(response => {
+    if (response.ok) {
+      safePut(cache, request, response.clone());
+    }
+    return response;
+  }).catch(() => null);
+
+  // 有快取就立即回傳，無快取才等網路
+  return cached || fetchPromise;
 }
 
 // ── Network First（資料 JSON 專用，帶離線回退）────────────
