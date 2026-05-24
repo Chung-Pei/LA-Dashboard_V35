@@ -2300,15 +2300,23 @@ function renderProfile(sid) {
     });
   }
 
-  // BUG-4 FIX: 單點時加左右 layout padding，避免點貼壁
-  const isSinglePoint = allLabels.length === 1;
+  // BUG-4 FIX: 單點時在 labels 前後各補一個空字串 label，
+  // 使 category scale 將資料點置中（layout.padding 對 category scale 無效）。
+  const displayLabels = allLabels.length === 1
+    ? ['', allLabels[0], '']
+    : allLabels;
+  const displayDatasets = allLabels.length === 1
+    ? datasets.map(ds => ({
+        ...ds,
+        data: [null, ds.data[0], null],
+      }))
+    : datasets;
 
   mkChart('chartProfile', {
     type: 'line',
-    data: { labels: allLabels, datasets },
+    data: { labels: displayLabels, datasets: displayDatasets },
     options: {
       ...CHART_DEFAULTS,
-      layout: isSinglePoint ? { padding: { left: 60, right: 60 } } : {},
       scales: {
         x: {
           type: 'category',
