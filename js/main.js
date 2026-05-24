@@ -2803,15 +2803,18 @@ function renderCorrelation(filtered) {
     prog: c.program, sem: c.semester, cls: c.sheet_name
   }));
 
-  const reg   = DATA?.meta?.count_passrate_regression;
-  const hasReg = reg?.available === true;
-  const rLabel = hasReg
-    ? `回歸線  r=${reg.r}  y=${reg.slope >= 0 ? '+' : ''}${reg.slope}x${reg.intercept >= 0 ? '+' : ''}${reg.intercept}`
+  const regData = DATA?.meta?.count_passrate_regression;  // schema 3.0: 巢狀結構
+
+  // 全體合併回歸線（橘色虛線）
+  const regAll   = regData?.all;
+  const hasRegAll = regAll?.available === true;
+  const rLabelAll = hasRegAll
+    ? `全體回歸線  r=${regAll.r}  y=${regAll.slope}x${regAll.intercept >= 0 ? '+' : ''}${regAll.intercept}`
     : '';
 
-  const rDataset = hasReg ? [{
-    label:       rLabel,
-    data:        reg.line,
+  const rDatasetAll = hasRegAll ? [{
+    label:       rLabelAll,
+    data:        regAll.line,
     type:        'line',
     borderColor: 'rgba(247,164,79,0.85)',
     borderWidth: 2,
@@ -2820,6 +2823,28 @@ function renderCorrelation(filtered) {
     fill:        false,
     tension:     0,
   }] : [];
+
+  // 各學制回歸線（依 PROGRAM_COLORS，細實線）
+  const programs = [...new Set(pts.map(p => p.prog))];
+  const rDatasetByProg = programs.flatMap(prog => {
+    const reg = regData?.[prog];
+    if (!reg?.available) return [];
+    const col   = PROGRAM_COLORS[prog] ?? 'rgba(180,180,180,0.7)';
+    const label = reg.label ?? PROGRAM_LABELS[prog] ?? prog;
+    return [{
+      label:       `${label}  r=${reg.r}`,
+      data:        reg.line,
+      type:        'line',
+      borderColor: col,
+      borderWidth: 1.5,
+      borderDash:  [3, 3],
+      pointRadius: 0,
+      fill:        false,
+      tension:     0,
+    }];
+  });
+
+  const hasAnyReg = hasRegAll || rDatasetByProg.length > 0;
 
   mkChart('chartCorrelation', {
     type: 'scatter',
@@ -2832,13 +2857,14 @@ function renderCorrelation(filtered) {
           pointRadius:     5,
           pointHoverRadius:7,
         },
-        ...rDataset,
+        ...rDatasetAll,
+        ...rDatasetByProg,
       ]
     },
     options: { ...CHART_DEFAULTS,
       plugins: { ...CHART_DEFAULTS.plugins,
         legend: {
-          display:  hasReg,
+          display:  hasAnyReg,
           position: 'bottom',
           labels:   { color: 'var(--text,#dde3f5)', font: { size: 11 } },
         },
