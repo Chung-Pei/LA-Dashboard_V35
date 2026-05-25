@@ -264,6 +264,13 @@ select option {
   flex: 0 1 300px;
   min-width: 220px;
 }
+/* label + mode-toggle 綁定為同一 flex item，防止 flex-wrap 拆散 */
+.filter-pair-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
 @media (max-width: 600px) {
   .filter-bar {
     flex-direction: column;
@@ -301,6 +308,13 @@ select option {
     gap: 8px;
     width: 100%;
     flex: none;
+  }
+  .filter-pair-inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
   }
   .filter-pair-search .search-wrap,
   #cFilterGeneral .search-wrap { max-width: none; flex: 1; min-width: 0; }
@@ -1502,7 +1516,7 @@ body.light .behavior-range-badge {
     <div class="filter-sep"></div>
 
     <!-- 3. 課程類型 -->
-    <div class="filter-pair">
+    <div class="filter-pair filter-pair-inline">
       <span class="filter-label">課程類型 Type</span>
       <div class="mode-toggle">
         <button type="button" class="mode-btn active" id="cTypeAll"    data-action="setCType" data-arg="all">全部</button>
@@ -1513,7 +1527,7 @@ body.light .behavior-range-badge {
     <div class="filter-sep"></div>
 
     <!-- 4. 評量指標 -->
-    <div class="filter-pair">
+    <div class="filter-pair filter-pair-inline">
       <span class="filter-label">評量指標 Metric</span>
       <div class="mode-toggle">
         <button type="button" class="mode-btn active" id="cExamSem" data-action="setCExam" data-arg="semester_score">學期</button>
@@ -1524,7 +1538,7 @@ body.light .behavior-range-badge {
     <div class="filter-sep"></div>
 
     <!-- 5. 及格狀況 -->
-    <div class="filter-pair">
+    <div class="filter-pair filter-pair-inline">
       <span class="filter-label">及格狀況 Pass</span>
       <div class="mode-toggle">
         <button type="button" class="mode-btn active" id="cPassAll"  data-action="setCPass" data-arg="all">全體</button>
