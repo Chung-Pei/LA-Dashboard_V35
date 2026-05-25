@@ -2831,6 +2831,9 @@ function renderBoxPlot(allClasses, filterProg) {
   });
 }
 
+// 指定學制時「顯示全體回歸線」切換狀態（預設隱藏）
+let _corrShowAllReg = false;
+
 function renderCorrelation(filtered) {
   const pts = filtered.filter(c => c.count && c.pass_rate != null).map(c => ({
     x: c.count, y: +(c.pass_rate * 100).toFixed(1),
@@ -2840,12 +2843,47 @@ function renderCorrelation(filtered) {
   const regData = DATA?.meta?.count_passrate_regression;  // schema 3.0: 巢狀結構
   const optData = DATA?.meta?.optimal_enrollment;         // schema 3.0: 各學制建議人數
 
+  // 讀取目前學制篩選狀態：'all' = 未指定學制，否則為特定學制代碼
+  const filterProg = document.getElementById('dFilterProgram')?.value ?? 'all';
+  const isAllProg  = filterProg === 'all';
+
   // 全體合併回歸線（橘色虛線）
-  const regAll    = regData?.all;
-  const hasRegAll = regAll?.available === true;
+  // 全部學制時：重置切換狀態並顯示；指定學制時：依 _corrShowAllReg 決定
+  const regAll = regData?.all;
+  if (isAllProg) _corrShowAllReg = false;  // 切回全部學制時重置
+  const hasRegAll = isAllProg
+    ? (regAll?.available === true)
+    : (_corrShowAllReg && regAll?.available === true);
   const rLabelAll = hasRegAll
     ? `全體回歸線  r=${regAll.r}  y=${regAll.slope}x${regAll.intercept >= 0 ? '+' : ''}${regAll.intercept}`
     : '';
+
+  // 指定學制時：在圖表容器上方渲染切換按鈕
+  const btnContainerId = 'corrToggleAllRegBtn';
+  let btnContainer = document.getElementById(btnContainerId);
+  if (!isAllProg && regAll?.available === true) {
+    if (!btnContainer) {
+      btnContainer = document.createElement('div');
+      btnContainer.id = btnContainerId;
+      btnContainer.style.cssText = 'text-align:right;margin-bottom:6px;';
+      const canvas = document.getElementById('chartCorrelation');
+      canvas?.parentNode?.insertBefore(btnContainer, canvas);
+    }
+    btnContainer.innerHTML = `<button
+      id="corrToggleAllRegBtn_btn"
+      onclick="window._toggleCorrAllReg()"
+      style="
+        font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;
+        border:1px solid rgba(247,164,79,0.6);
+        background:${_corrShowAllReg ? 'rgba(247,164,79,0.18)' : 'transparent'};
+        color:${_corrShowAllReg ? 'rgba(247,164,79,1)' : 'var(--text-dim,#9aa0b8)'};
+        transition:background 0.15s,color 0.15s;
+      ">
+      ${_corrShowAllReg ? '▶ 隱藏全體回歸線' : '▷ 顯示全體回歸線'}
+    </button>`;
+  } else if (btnContainer) {
+    btnContainer.remove();
+  }
 
   const rDatasetAll = hasRegAll ? [{
     label:       rLabelAll,
@@ -2861,8 +2899,9 @@ function renderCorrelation(filtered) {
   }] : [];
 
   // 各學制回歸線（依 PROGRAM_COLORS，細實線）
+  // 全部學制時隱藏（避免雜亂）；指定學制時只顯示對應學制的回歸線
   const programs = [...new Set(pts.map(p => p.prog))];
-  const rDatasetByProg = programs.flatMap(prog => {
+  const rDatasetByProg = isAllProg ? [] : programs.flatMap(prog => {
     const reg = regData?.[prog];
     if (!reg?.available) return [];
     const col   = PROGRAM_COLORS[prog] ?? 'rgba(180,180,180,0.7)';
@@ -2945,8 +2984,13 @@ function renderCorrelation(filtered) {
   _renderEnrollmentSummary(programs, optData);
 }
 
+// 全體回歸線切換（由按鈕 onclick 呼叫）
+window._toggleCorrAllReg = function() {
+  _corrShowAllReg = !_corrShowAllReg;
+  renderD();
+};
+
 /**
- * 在 #enrollmentSummary 容器渲染建議人數摘要表格。
  * 顯示當前篩選有資料的學制 + 全體合併（all）。
  * available=false 的學制也顯示，說明原因。
  */
