@@ -48,10 +48,11 @@
  *           提取為 _canUseSeg() helper，移除冗餘條件，兩處共用。
  *
  * FIXED (2025-05, v5):
- *   BUG8  — _renderLaggedSection：篩選後所有指標 |r| < 0.1 時，rows.length === 0 觸發
- *           `return`，tbody 保留全量舊內容，使用者看不出已連動。
- *           修正：rows 為空時改為更新已存在的 tbody 顯示「無符合門檻」提示，
- *           確保篩選後畫面確實清除舊的全量數值。
+ *   BUG8  — _renderLaggedSection 顯示門檻 |r| >= 0.1 過高，導致多數學期篩選後
+ *           rows.length === 0，tbody 靜默保留全量舊值，使用者看不出已連動。
+ *           實測：學期 1112/1122 在門檻 0.1 下通過指標數為 0。
+ *           修正：門檻降為 0.05，同步更新 footer 說明文字。
+ *           同時修正 rows 為空時改顯示「無符合門檻」提示取代 return，確保舊內容被清除。
  */
 
 const BehaviorCorrelationTab = (() => {
@@ -617,7 +618,7 @@ const BehaviorCorrelationTab = (() => {
       })
       .filter(([, v]) => {
         const fr = v.front?.r, br = v.back?.r;
-        return (fr != null && Math.abs(fr) >= 0.1) || (br != null && Math.abs(br) >= 0.1);
+        return (fr != null && Math.abs(fr) >= 0.05) || (br != null && Math.abs(br) >= 0.05);
       })
       .sort(([, a], [, b]) => Math.abs(b.lag_delta ?? 0) - Math.abs(a.lag_delta ?? 0));
 
@@ -627,9 +628,7 @@ const BehaviorCorrelationTab = (() => {
       const tbody = existing?.querySelector("tbody");
       if (tbody) {
         const n = Array.isArray(filteredRows) ? filteredRows.length : "—";
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted small py-2">
-          此篩選條件下無 |r| ≥ 0.1 的指標（n=${n}）
-        </td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted small py-2">此篩選條件下無 |r| ≥ 0.05 的指標（n=${n}）</td></tr>`;
       }
       return;
     }
@@ -729,7 +728,7 @@ const BehaviorCorrelationTab = (() => {
               Δ = r（${backLabel}）− r（${frontLabel}）
             </div>
             <p style="margin:8px 0 0;color:var(--text-dim,#9aa0b8);font-size:.82rem">
-              僅顯示至少一欄 |r| ≥ 0.1 的指標，並依 |Δ| 由大到小排序，讓差異最顯著的行為優先呈現。
+              僅顯示至少一欄 |r| ≥ 0.05 的指標，並依 |Δ| 由大到小排序，讓差異最顯著的行為優先呈現。
             </p>
           </div>
 
@@ -848,7 +847,7 @@ const BehaviorCorrelationTab = (() => {
           <span style="color:var(--text-mid,#9aa0b8);font-weight:600">— 無法計算</span>
           樣本不足（&lt; 5 筆）或所有人數值相同（σ = 0），Δ 無法得出。
         </div>
-        <div style="margin-top:2px;opacity:.7">色彩同熱力圖（藍正紅負）。全量模式標 * 者 p &lt; 0.05。</div>
+        <div style="margin-top:2px;opacity:.7">色彩同熱力圖（藍正紅負）。全量模式標 * 者 p &lt; 0.05。僅顯示 |r| ≥ 0.05 的指標。</div>
       </div>`;
 
     anchor.parentNode.insertBefore(section, anchor.nextSibling);
