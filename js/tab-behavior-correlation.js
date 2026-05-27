@@ -620,32 +620,62 @@ const BehaviorCorrelationTab = (() => {
     const anchor = document.getElementById(afterId);
     if (!anchor) return;
 
-    const lagged = _corrData?.lagged_pearson;
-    if (!lagged?.results || !Object.keys(lagged.results).length) {
+    const lagged = _corrData?.lagged_pearson || null;
+    const hasLaggedResults = !!(lagged?.results && Object.keys(lagged.results).length);
+    const targets = _targets();
+    const front_target = lagged?.front_target
+      || targets.find(t => /midterm|grade_midterm/i.test(t))
+      || targets[0];
+    const back_target = lagged?.back_target
+      || targets.find(t => /final|grade_final/i.test(t))
+      || targets.find(t => t !== front_target)
+      || targets[1];
+
+    if (!front_target || !back_target || front_target === back_target) {
       const slot = document.getElementById(`${afterId}_lagged`);
       if (slot) slot.innerHTML = `<p style="font-size:.8rem;color:var(--text-dim,#888);margin:8px 0 0">
-        尚無時間滯後資料（ETL 未產出 lagged_pearson），請重跑 ETL 後重整頁面。</p>`;
+        無法建立時間滯後相關性：目前資料缺少可比較的前段/後段成績欄位。</p>`;
       return;
     }
 
-    const { front_target, back_target, results } = lagged;
+    const results = hasLaggedResults
+      ? lagged.results
+      : Object.fromEntries(_features().map(feat => [feat, null]));
     const frontLabel = GRADE_LABELS[front_target] || front_target;
     const backLabel  = GRADE_LABELS[back_target]  || back_target;
 
     // 判斷是否為全量模式（篩選器皆為 all）
     const isUnfiltered = _isUnfiltered();
 
-    // 篩選模式下即時重算 r 值，取代 ETL 靜態值
-    const activeRows = (!isUnfiltered && Array.isArray(filteredRows) && filteredRows.length > 0)
+    const allRows = Array.isArray(filteredRows)
       ? filteredRows
+      : (Array.isArray(_lastFiltered)
+          ? _lastFiltered
+          : (Array.isArray(_allScatterData) ? _allScatterData : (_corrData?.scatter_data || [])));
+
+    // 篩選模式、Spearman、或 ETL 未產出 lagged_pearson 時即時重算 r 值
+    const shouldRecompute = !hasLaggedResults || !isUnfiltered || _corrType === "spearman";
+    const activeRows = (shouldRecompute && Array.isArray(allRows) && allRows.length > 0)
+      ? allRows
       : null;
+
+    if (shouldRecompute && !activeRows) {
+      const slot = document.getElementById(`${afterId}_lagged`);
+      if (slot) slot.innerHTML = `<p style="font-size:.8rem;color:var(--text-dim,#888);margin:8px 0 0">
+        無法建立時間滯後相關性：目前資料缺少 scatter_data 明細。</p>`;
+      return;
+    }
 
     // 重建 rows：篩選模式下動態計算 front r / back r / lag_delta
     const rows = Object.entries(results)
       .map(([feat, v]) => {
-        if (!activeRows) return [feat, v];  // 全量：直接用 ETL 值
-        const frResult = _pearsonValue(activeRows, feat, front_target);
-        const brResult = _pearsonValue(activeRows, feat, back_target);
+        if (!activeRows) return [feat, v];  // 全量且 ETL 有 lagged_pearson：直接用 ETL 值
+        const frResult = (_corrType === "spearman")
+          ? _spearmanValue(activeRows, feat, front_target)
+          : _pearsonValue(activeRows, feat, front_target);
+        const brResult = (_corrType === "spearman")
+          ? _spearmanValue(activeRows, feat, back_target)
+          : _pearsonValue(activeRows, feat, back_target);
         const fr = frResult?.r ?? null;
         const br = brResult?.r ?? null;
         const lagDelta = (fr != null && br != null) ? +(br - fr).toFixed(4) : null;
