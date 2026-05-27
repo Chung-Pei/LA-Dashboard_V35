@@ -1,4 +1,4 @@
-﻿/**
+/**
  * tab-behavior-correlation.js
  * 相關性分析 Tab — Pearson 熱力圖 + 散佈圖
  * 依賴：Chart.js (scatter)、behavior-loader.js
@@ -53,6 +53,14 @@
  *           實測：學期 1112/1122 在門檻 0.1 下通過指標數為 0。
  *           修正：門檻降為 0.05，同步更新 footer 說明文字。
  *           同時修正 rows 為空時改顯示「無符合門檻」提示取代 return，確保舊內容被清除。
+ *
+ * FIXED (2025-05, v6 — systematic-debugging audit):
+ *   DEAD-A — UTF-8 BOM 移除。
+ *   DEAD-B — _filterEduType === "all" 條件在 _isUnfiltered() 中永遠 true；移除死條件。
+ *   DEAD-C — _filteredScatterData cache key 中的 |_filterEduType 段永遠為 "|all"；移除常數段。
+ *   DEAD-D — let _filterEduType 宣告及 init / onFilterChange / resetFilters 中 4 處硬設移除。
+ *   OPT-A  — _renderInsightsBadge jsdoc 殘留舊「FIX：接受 filteredRows」注解清除。
+ *   UI-FIX — _renderScatterSelector 移除重複 <h6>散佈圖</h6>（與 card2 標題重疊）。
  */
 
 const BehaviorCorrelationTab = (() => {
@@ -134,7 +142,6 @@ const BehaviorCorrelationTab = (() => {
   let _filterSemester   = "all";
   let _filterCluster    = "all";
   let _filterPass       = "all";
-  let _filterEduType    = "all";
   let _filterOutlier    = false;
   let _corrType         = "pearson";
 
@@ -144,7 +151,6 @@ const BehaviorCorrelationTab = (() => {
       _filterSemester === "all" &&
       _filterCluster  === "all" &&
       _filterPass     === "all" &&
-      _filterEduType  === "all" &&
       !_filterOutlier
     );
   }
@@ -358,7 +364,6 @@ const BehaviorCorrelationTab = (() => {
       _filterSemester = "all";
       _filterCluster  = "all";
       _filterPass     = "all";
-      _filterEduType  = "all";
       _filterOutlier  = false;
 
       _renderFilterBar(heatmapId);
@@ -494,7 +499,6 @@ const BehaviorCorrelationTab = (() => {
     _filterSemester = document.getElementById("corrSemFilter")?.value     || "all";
     _filterCluster  = document.getElementById("corrClusterFilter")?.value  || "all";
     _filterPass     = document.getElementById("corrPassFilter")?.value     || "all";
-    _filterEduType  = "all";  // 修課類型 UI 已移除（規格書 §四），內部邏輯保留備用
     _filterOutlier  = document.getElementById("corrOutlierToggle")?.checked ?? false;
     _lastFilterKey  = null;
     _applyFiltersAndRender("corrHeatmap", "scatterSection");
@@ -504,7 +508,6 @@ const BehaviorCorrelationTab = (() => {
     _filterSemester = "all";
     _filterCluster  = "all";
     _filterPass     = "all";
-    _filterEduType  = "all";
     _filterOutlier  = false;
     _lastFilterKey  = null;
     // Sync selects back to "all"
@@ -524,7 +527,7 @@ const BehaviorCorrelationTab = (() => {
   let _lastFiltered   = null;
 
   function _filteredScatterData() {
-    const key = `${_filterSemester}|${_filterCluster}|${_filterPass}|${_filterEduType}|${_filterOutlier}`;
+    const key = `${_filterSemester}|${_filterCluster}|${_filterPass}|${_filterOutlier}`;
     if (key === _lastFilterKey && _lastFiltered !== null) return _lastFiltered;
 
     const raw = _allScatterData;
@@ -1183,10 +1186,7 @@ const BehaviorCorrelationTab = (() => {
   /**
    * Ph2b B6：最高相關指標 Badge + score_delta / cramming 洞察摘要。
    * 插入於熱力圖容器上方；無 correlation_insights 資料時靜默不顯示。
-   *
-   * FIX：接受 filteredRows 參數。
-   *   • 全量模式：讀 ETL 預算值 _corrData.correlation_insights（原行為）
-   *   • 篩選模式：以 _pearsonValue / _spearmanValue 即時重算三項指標
+   * 全量模式：讀 ETL 預算值；篩選模式：以 _pearsonValue / _spearmanValue 即時重算。
    */
   function _renderInsightsBadge(insertBeforeId, filteredRows) {
     const anchor = document.getElementById(insertBeforeId);
@@ -1339,7 +1339,6 @@ const BehaviorCorrelationTab = (() => {
     }
 
     el.innerHTML = `
-      <h6 class="mt-4 mb-2 fw-semibold">散佈圖</h6>
       <div id="scatterChartWrap" style="position:relative;height:320px;width:100%">
         <canvas id="scatterChart"></canvas>
       </div>`;
