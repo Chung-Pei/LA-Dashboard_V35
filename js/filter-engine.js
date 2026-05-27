@@ -1,5 +1,5 @@
 /**
- * filter-engine.js  v1.0.0
+ * filter-engine.js  v1.1.0
  * 學習分析儀表板：篩選器核心邏輯模組
  *
  * 職責：純邏輯層，不操作 DOM、不依賴 Chart.js、不依賴全域 DATA
@@ -16,6 +16,7 @@
  *
  * 版本歷程：
  *   v1.0.0  2026-05-13  初版，涵蓋規格書 v3.1 規則一至五
+ *   v1.1.0  2026-05-27  BUG-FIX: getProgram() pattern 補齊四技/學士後護各種班名格式，與 main.js classifyProgram 對齊
  */
 
 const FilterEngine = (() => {
@@ -174,18 +175,25 @@ const FilterEngine = (() => {
     if (SHEET_PROGRAM_MAP[stripped] !== undefined) {
       return SHEET_PROGRAM_MAP[stripped];
     }
-    // 3. Prefix pattern match（預防未來新班名）
-    if (/^(護|日)?\d*二一/.test(stripped)) {
-      // 分辨在職/夜間/一般
-      if (/[甲乙]/.test(stripped)) return '2yr_work';
-      if (/[丙丁]/.test(stripped)) return '2yr_night';
-      if (/[戊己A-E]/.test(stripped)) return '2yr_gen';
-    }
-    if (/^護(21|二一)[甲乙]/.test(stripped)) return '2yr_work';
-    if (/^護(21|二一)[丙丁]/.test(stripped)) return '2yr_night';
-    if (/^護(21|二一)[戊己A-E]/.test(stripped)) return '2yr_gen';
-    if (/^護四一/.test(stripped)) return '4yr';
-    if (/^學後護/.test(stripped)) return 'post';
+    // 3. Comprehensive pattern match（與 main.js classifyProgram 對齊，v1.1.0）
+    // 重修相關優先
+    if (/重修生/.test(stripped)) return 'retake_student';
+    if (/重修|暑期|學分|補修|微免|遠距/i.test(stripped) || /R\d/i.test(stripped)) return 'retake_class';
+    // 學士後護
+    if (/學後護|學士後|學後/.test(stripped)) return 'post';
+    // 二技系列（護21X / 護二一X / 日21X 等各種書寫）
+    if (/(?:護|日|N)?2[1-9][甲乙]/.test(stripped)) return '2yr_work';
+    if (/(?:護|日|N)?2[1-9][丙丁]/.test(stripped)) return '2yr_night';
+    if (/(?:護|日|N)?2[1-9][戊己A-Ea-e]/.test(stripped)) return '2yr_gen';
+    if (/(?:護|日|N)?二[一-九][甲乙]/.test(stripped)) return '2yr_work';
+    if (/(?:護|日|N)?二[一-九][丙丁]/.test(stripped)) return '2yr_night';
+    if (/(?:護|日|N)?二[一-九][戊己A-Ea-e]/.test(stripped)) return '2yr_gen';
+    // 四技一般（護4xX / 護四xX）
+    if (/(?:護|日|N)?4[1-9][A-Da-d]/.test(stripped)) return '4yr';
+    if (/(?:護|日|N)?四[一-九][A-Da-d甲乙丙丁]/.test(stripped)) return '4yr';
+    if (/^護四[一-九]/.test(stripped)) return '4yr';
+    // 廣義 fallback
+    if (/^(護|日)?\d*二一/.test(stripped)) return '2yr_gen';
     return null;
   }
 

@@ -940,6 +940,20 @@ const PROGRAM_COLORS = {
   'retake_student': '#a0b0c0',
 };
 
+/**
+ * normalizeProgramFilter(value)
+ * Accepts either an English program key (e.g. '4yr') or its Chinese label
+ * (e.g. '四技一般') and always returns the English key, or 'all' for blanks.
+ * This handles HTML <option value> set to Chinese text instead of the key.
+ */
+function normalizeProgramFilter(value) {
+  if (!value || value === 'all') return 'all';
+  if (PROGRAM_LABELS[value] != null) return value; // already an English key
+  // Try reverse-lookup from Chinese label
+  const found = Object.entries(PROGRAM_LABELS).find(([, lbl]) => lbl === value);
+  return found ? found[0] : value;
+}
+
 function programOrderIndex(program) {
   const idx = PROGRAM_ORDER.indexOf(program);
   return idx >= 0 ? idx : 99;
@@ -2957,7 +2971,9 @@ function renderCorrelation(filtered) {
   const optData = DATA?.meta?.optimal_enrollment;         // schema 3.0: 各學制建議人數
 
   // 讀取目前學制篩選狀態：'all' = 未指定學制，否則為特定學制代碼
-  const filterProg = document.getElementById('dFilterProgram')?.value ?? 'all';
+  const filterProg = normalizeProgramFilter(
+    document.getElementById('dFilterProgram')?.value ?? 'all'
+  );
   const isAllProg  = filterProg === 'all';
 
   // 全體合併回歸線（橘色虛線）
@@ -3361,7 +3377,7 @@ function toggleRetakerSwitch(panel) {
     panel === 'A' ? 'aFilterProgram' :
     panel === 'D' ? 'dFilterProgram' : 'cFilterProgram'
   );
-  const prog = progEl?.value || 'all';
+  const prog = normalizeProgramFilter(progEl?.value || 'all');
 
   if (typeof FilterEngine !== 'undefined' && FilterEngine.isRetakerSwitchLocked(prog)) {
     return;
@@ -3386,7 +3402,7 @@ function _syncRetakerBtn(panel) {
     panel === 'A' ? 'aFilterProgram' :
     panel === 'D' ? 'dFilterProgram' : 'cFilterProgram'
   );
-  const prog = progEl?.value || 'all';
+  const prog = normalizeProgramFilter(progEl?.value || 'all');
   const locked = typeof FilterEngine !== 'undefined'
     ? FilterEngine.isRetakerSwitchLocked(prog)
     : false;
@@ -3683,7 +3699,9 @@ function getEnvAnnotations(sems) {
 function renderD() {
   if (!DATA) return;
 
-  const filterProg = document.getElementById('dFilterProgram').value;
+  const filterProg = normalizeProgramFilter(
+    document.getElementById('dFilterProgram').value
+  );
   const sems = getDSemList();
 
   if (sems.length === 0) {
@@ -3798,7 +3816,9 @@ function renderD() {
 }
 
 function renderDTrendMerge(filtered, sems, allClasses) {
-  const filterProg = document.getElementById('dFilterProgram').value;
+  const filterProg = normalizeProgramFilter(
+    document.getElementById('dFilterProgram').value
+  );
 
   let datasets;
   if (filterProg === 'all') {
