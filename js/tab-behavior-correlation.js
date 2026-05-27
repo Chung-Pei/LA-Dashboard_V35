@@ -560,7 +560,96 @@ const BehaviorCorrelationTab = (() => {
     return _lastFiltered;
   }
 
+  function _ensureCardLayout(heatmapId, scatterWrapperId) {
+    const heatmapEl = document.getElementById(heatmapId);
+    const scatterEl = document.getElementById(scatterWrapperId);
+    if (!heatmapEl || !scatterEl) return;
+    if (document.getElementById("corrCardGrid")) return;
+
+    const parent = heatmapEl.parentNode;
+    const cardCss = [
+      "background:var(--card-bg,#fff)",
+      "border:1px solid var(--border,#d5dbea)",
+      "border-radius:12px",
+      "padding:16px",
+      "display:flex",
+      "flex-direction:column",
+      "gap:10px",
+      "min-width:0",
+    ].join(";");
+
+    const grid = document.createElement("div");
+    grid.id = "corrCardGrid";
+    grid.style.cssText = [
+      "display:grid",
+      "grid-template-columns:minmax(0,1fr) minmax(0,1fr)",
+      "gap:16px",
+      "margin-top:12px",
+    ].join(";");
+
+    const card1 = document.createElement("div");
+    card1.className = "chart-card";
+    card1.style.cssText = cardCss;
+    card1.innerHTML = `
+      <h6 style="margin:0;font-size:.92rem;font-weight:700;color:var(--text,#172033);
+                 display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        Pearson / Spearman 相關係數
+        <span style="font-size:.75rem;font-weight:400;color:var(--text-dim,#667085)">
+          行為指標與成績的相關矩陣
+        </span>
+      </h6>
+      <div id="corrInsightsBadgeSlot"></div>
+      <div id="${heatmapId}_inner"></div>`;
+
+    const card2 = document.createElement("div");
+    card2.className = "chart-card";
+    card2.style.cssText = cardCss;
+    card2.innerHTML = `
+      <h6 style="margin:0;font-size:.92rem;font-weight:700;color:var(--text,#172033)">
+        散佈圖
+      </h6>
+      <div id="${scatterWrapperId}_inner"></div>`;
+
+    const card3 = document.createElement("div");
+    card3.className = "chart-card";
+    card3.style.cssText = `${cardCss};grid-column:1/-1`;
+    card3.innerHTML = `
+      <h6 style="margin:0;font-size:.92rem;font-weight:700;color:var(--text,#172033);
+                 display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        ⏱ 時間滯後相關性
+        <span style="font-size:.75rem;font-weight:400;color:var(--text-dim,#667085)">
+          行為指標預測力的時間性偏移分析
+        </span>
+      </h6>
+      <div id="${scatterWrapperId}_lagged"></div>`;
+
+    grid.appendChild(card1);
+    grid.appendChild(card2);
+    grid.appendChild(card3);
+    parent.insertBefore(grid, heatmapEl);
+
+    const heatmapInner = document.getElementById(`${heatmapId}_inner`);
+    const scatterInner = document.getElementById(`${scatterWrapperId}_inner`);
+    if (heatmapInner) heatmapInner.appendChild(heatmapEl);
+    if (scatterInner) scatterInner.appendChild(scatterEl);
+
+    const styleId = "corrCardGridStyle";
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement("style");
+      style.id = styleId;
+      style.textContent = `
+        @media (max-width: 900px) {
+          #corrCardGrid { grid-template-columns: 1fr !important; }
+          #corrCardGrid > .chart-card { grid-column: auto !important; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+
   function _applyFiltersAndRender(heatmapId, scatterWrapperId) {
+    _ensureCardLayout(heatmapId, scatterWrapperId);
+
     const filtered = _filteredScatterData();
     const count = Array.isArray(filtered) ? filtered.length : "—";
 
@@ -586,27 +675,77 @@ const BehaviorCorrelationTab = (() => {
     const anchor = document.getElementById(afterId);
     if (!anchor) return;
 
-    const lagged = _corrData?.lagged_pearson;
-    if (!lagged?.results || !Object.keys(lagged.results).length) return;
+    const slot = document.getElementById(`${afterId}_lagged`);
+    const writeLaggedMessage = (message) => {
+      const html = `<div style="padding:12px 14px;border:1px solid rgba(120,130,160,.22);
+        border-radius:8px;background:rgba(120,130,160,.06);font-size:.82rem;
+        color:var(--text-dim,#667085);line-height:1.7">${message}</div>`;
+      if (slot) slot.innerHTML = html;
+      else anchor.insertAdjacentHTML("afterend", html);
+    };
+    const mountLaggedSection = (sectionEl) => {
+      if (slot) {
+        if (sectionEl.parentNode !== slot) {
+          slot.innerHTML = "";
+          slot.appendChild(sectionEl);
+        }
+      } else if (!sectionEl.isConnected) {
+        anchor.parentNode.insertBefore(sectionEl, anchor.nextSibling);
+      }
+    };
 
-    const { front_target, back_target, results } = lagged;
+    const lagged = _corrData?.lagged_pearson || null;
+    const hasLaggedResults = !!(lagged?.results && Object.keys(lagged.results).length);
+    const targets = _targets();
+    const front_target = lagged?.front_target
+      || targets.find(t => /midterm|grade_midterm/i.test(t))
+      || targets[0];
+    const back_target = lagged?.back_target
+      || targets.find(t => /final|grade_final/i.test(t))
+      || targets.find(t => t !== front_target)
+      || targets[1];
+
+    if (!front_target || !back_target || front_target === back_target) {
+      writeLaggedMessage("無法建立時間滯後相關性：目前資料缺少可比較的前段/後段成績欄位。");
+      return;
+    }
+
+    const results = hasLaggedResults
+      ? lagged.results
+      : Object.fromEntries(_features().map(feat => [feat, null]));
     const frontLabel = GRADE_LABELS[front_target] || front_target;
     const backLabel  = GRADE_LABELS[back_target]  || back_target;
 
     // 判斷是否為全量模式（篩選器皆為 all）
     const isUnfiltered = _isUnfiltered();
 
-    // 篩選模式下即時重算 r 值，取代 ETL 靜態值
-    const activeRows = (!isUnfiltered && Array.isArray(filteredRows) && filteredRows.length > 0)
+    const allRows = Array.isArray(filteredRows)
       ? filteredRows
+      : (Array.isArray(_lastFiltered)
+          ? _lastFiltered
+          : (Array.isArray(_allScatterData) ? _allScatterData : (_corrData?.scatter_data || [])));
+
+    // 篩選模式、Spearman、或 ETL 未產出 lagged_pearson 時即時重算 r 值。
+    const shouldRecompute = !hasLaggedResults || !isUnfiltered || _corrType === "spearman";
+    const activeRows = (shouldRecompute && Array.isArray(allRows) && allRows.length > 0)
+      ? allRows
       : null;
+
+    if (shouldRecompute && !activeRows) {
+      writeLaggedMessage("無法建立時間滯後相關性：目前資料缺少 scatter_data 明細。");
+      return;
+    }
 
     // 重建 rows：篩選模式下動態計算 front r / back r / lag_delta
     const rows = Object.entries(results)
       .map(([feat, v]) => {
-        if (!activeRows) return [feat, v];  // 全量：直接用 ETL 值
-        const frResult = _pearsonValue(activeRows, feat, front_target);
-        const brResult = _pearsonValue(activeRows, feat, back_target);
+        if (!activeRows) return [feat, v];  // 全量且 ETL 有 lagged_pearson：直接用 ETL 值
+        const frResult = (_corrType === "spearman")
+          ? _spearmanValue(activeRows, feat, front_target)
+          : _pearsonValue(activeRows, feat, front_target);
+        const brResult = (_corrType === "spearman")
+          ? _spearmanValue(activeRows, feat, back_target)
+          : _pearsonValue(activeRows, feat, back_target);
         const fr = frResult?.r ?? null;
         const br = brResult?.r ?? null;
         const lagDelta = (fr != null && br != null) ? +(br - fr).toFixed(4) : null;
@@ -617,18 +756,20 @@ const BehaviorCorrelationTab = (() => {
         }];
       })
       .filter(([, v]) => {
-        const fr = v.front?.r, br = v.back?.r;
-        return (fr != null && Math.abs(fr) >= 0.05) || (br != null && Math.abs(br) >= 0.05);
+        const fr = v?.front?.r, br = v?.back?.r;
+        return fr != null || br != null;
       })
       .sort(([, a], [, b]) => Math.abs(b.lag_delta ?? 0) - Math.abs(a.lag_delta ?? 0));
 
-    // BUG8 FIX：rows 為空時不能靜默 return，必須清除 tbody 舊內容
     if (!rows.length) {
       const existing = document.getElementById("corrLaggedSection");
       const tbody = existing?.querySelector("tbody");
       if (tbody) {
         const n = Array.isArray(filteredRows) ? filteredRows.length : "—";
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted small py-2">此篩選條件下無 |r| ≥ 0.05 的指標（n=${n}）</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted small py-2">此篩選條件下無法計算時間滯後相關性（n=${n}）</td></tr>`;
+        mountLaggedSection(existing);
+      } else {
+        writeLaggedMessage("目前篩選條件下無法計算時間滯後相關性，可能是樣本數不足或指標/成績欄位沒有變異。");
       }
       return;
     }
@@ -674,7 +815,11 @@ const BehaviorCorrelationTab = (() => {
     const existing = document.getElementById("corrLaggedSection");
     if (existing) {
       const tbody = existing.querySelector("tbody");
-      if (tbody) { tbody.innerHTML = tableRows; return; }
+      if (tbody) {
+        tbody.innerHTML = tableRows;
+        mountLaggedSection(existing);
+        return;
+      }
       existing.remove();
     }
 
@@ -847,10 +992,10 @@ const BehaviorCorrelationTab = (() => {
           <span style="color:var(--text-mid,#9aa0b8);font-weight:600">— 無法計算</span>
           樣本不足（&lt; 5 筆）或所有人數值相同（σ = 0），Δ 無法得出。
         </div>
-        <div style="margin-top:2px;opacity:.7">色彩同熱力圖（藍正紅負）。全量模式標 * 者 p &lt; 0.05。僅顯示 |r| ≥ 0.05 的指標。</div>
+        <div style="margin-top:2px;opacity:.7">色彩同熱力圖（藍正紅負）。若 ETL 提供 p-value，全量模式標 * 者 p &lt; 0.05。</div>
       </div>`;
 
-    anchor.parentNode.insertBefore(section, anchor.nextSibling);
+    mountLaggedSection(section);
 
     const modal    = section.querySelector("#laggedHelpModal");
     const btnOpen  = section.querySelector("#btnLaggedHelp");
