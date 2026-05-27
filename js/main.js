@@ -1159,15 +1159,16 @@ function aggregateClassSummaries(rows, sem, sheet, type = 'all') {
   return first;
 }
 
-function getClassSummary(sem, sheet, type = 'all', includeRetaker = true) {
+function getClassSummary(sem, sheet, type = 'all', includeRetaker = true, program = 'all') {
   const rows = Object.values(DATA.class_summary).filter(c => {
     if (sem !== 'all' && c.semester !== sem) return false;
     if (sheet !== 'all' && c.sheet_name !== normalizeSheet(sheet)) return false;
     if (type !== 'all' && c.type !== type) return false;
+    const prog = classInfo(c.sheet_name, c.semester).program;
     if (!includeRetaker) {
-      const prog = classInfo(c.sheet_name, c.semester).program;
       if (prog === 'retake_class' || prog === 'retake_student') return false;
     }
+    if (program !== 'all' && prog !== program) return false;
     return true;
   });
   if (!rows.length) return null;
@@ -1181,17 +1182,17 @@ function recordMatchesClass(r, sem, sheet, type = 'all') {
     (type === 'all' || r.type === type);
 }
 
-function availableCompareSems(sem, sheet, type = 'all', includeRetaker = true) {
+function availableCompareSems(sem, sheet, type = 'all', includeRetaker = true, program = 'all') {
   const sems = DATA.meta.semesters;
   const idx = sems.indexOf(sem);
   if (idx <= 0) return [];
   return sems
     .slice(0, idx)
     .reverse()
-    .filter(prevSem => getClassSummary(prevSem, sheet, type, includeRetaker));
+    .filter(prevSem => getClassSummary(prevSem, sheet, type, includeRetaker, program));
 }
 
-function updateCompareFilter(sem, sheet, type = 'all', includeRetaker = true) {
+function updateCompareFilter(sem, sheet, type = 'all', includeRetaker = true, program = 'all') {
   const el = document.getElementById('aCompareSem');
   if (!el) return '';
   if (sem === 'all') {
@@ -1199,7 +1200,7 @@ function updateCompareFilter(sem, sheet, type = 'all', includeRetaker = true) {
     el.value = 'auto';
     return 'auto';
   }
-  const candidates = availableCompareSems(sem, sheet, type, includeRetaker);
+  const candidates = availableCompareSems(sem, sheet, type, includeRetaker, program);
   const prev = el.value || 'auto';
   el.innerHTML = [
     `<option value="auto">自動：上一個有資料</option>`,
@@ -1394,10 +1395,11 @@ function _hideAEmptyHint() {
 // PANEL A
 // ══════════════════════════════════════════════════════════
 function renderA() {
-  const sheet = document.getElementById('aFilterSheet').value;
-  const sem   = document.getElementById('aFilterSem').value;
-  const type  = document.getElementById('aFilterType').value;
-  const cls   = getClassSummary(sem, sheet, type, getIncludeRetaker('A'));
+  const sheet   = document.getElementById('aFilterSheet').value;
+  const sem     = document.getElementById('aFilterSem').value;
+  const type    = document.getElementById('aFilterType').value;
+  const program = document.getElementById('aFilterProgram').value;
+  const cls     = getClassSummary(sem, sheet, type, getIncludeRetaker('A'), program);
 
   if (!cls) {
     document.getElementById('aStats').innerHTML = '<div class="empty-state">無此班次資料</div>';
@@ -1489,9 +1491,9 @@ function renderA() {
     }
   });
 
-  renderNormalOverlay(cls, sem, sheet, type);
-  renderRegression(sem, sheet, type);
-  renderVarianceBar(sem, sheet);
+  renderNormalOverlay(cls, sem, sheet, type, program);
+  renderRegression(sem, sheet, type, program);
+  renderVarianceBar(sem, sheet, program);
 
   const trendCard = document.getElementById('chartTrend')?.closest('.chart-card');
   if (sheet === 'all') {
@@ -1507,9 +1509,10 @@ function renderA() {
 function renderTrend() {
   if (!DATA) return;
   const sheetName = document.getElementById('aTrendSheet').value;
-  const type = document.getElementById('aFilterType')?.value || 'all';
+  const type    = document.getElementById('aFilterType')?.value || 'all';
+  const program = document.getElementById('aFilterProgram')?.value || 'all';
   const relevant = DATA.meta.semesters
-    .map(sem => getClassSummary(sem, sheetName, type, getIncludeRetaker('A')))
+    .map(sem => getClassSummary(sem, sheetName, type, getIncludeRetaker('A'), program))
     .filter(Boolean);
 
   if (relevant.length === 0) return;
@@ -1996,15 +1999,21 @@ function renderCStats() {
   const avg = (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1);
   const pass = scores.filter(s=>s>=60).length;
   const passRate = ((pass/scores.length)*100).toFixed(1);
+  const uniqueStudents = new Set(recs.map(r => r.masked)).size;
+  const examLabel = { semester_score:'學期', midterm:'期中', final:'期末' }[cCurrentExam] || '學期';
+  const passColor = parseFloat(passRate) >= 90 ? 'var(--green)' : parseFloat(passRate) >= 70 ? 'var(--accent3)' : 'var(--red)';
   document.getElementById('cStats').innerHTML = `
     <div class="stat-card" style="--accent-color:var(--accent)">
-      <div class="val">${scores.length}</div><div class="lbl">記錄筆數</div>
+      <div class="val">${uniqueStudents}</div><div class="lbl">學生人數 Students</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--accent4)">
+      <div class="val">${scores.length}</div><div class="lbl">記錄筆數 Records</div>
     </div>
     <div class="stat-card" style="--accent-color:var(--accent2)">
-      <div class="val">${avg}</div><div class="lbl">平均分</div>
+      <div class="val">${avg}</div><div class="lbl">${examLabel}平均分 Avg</div>
     </div>
-    <div class="stat-card" style="--accent-color:var(--green)">
-      <div class="val">${passRate}%</div><div class="lbl">及格率</div>
+    <div class="stat-card" style="--accent-color:${passColor}">
+      <div class="val">${passRate}%</div><div class="lbl">及格率 Pass Rate</div>
     </div>
   `;
 }
@@ -2410,7 +2419,7 @@ function renderProfile(sid) {
 // ══════════════════════════════════════════════════════════
 // PANEL A — 新增圖表
 // ══════════════════════════════════════════════════════════
-function renderNormalOverlay(cls, sem, sheet, type = 'all') {
+function renderNormalOverlay(cls, sem, sheet, type = 'all', program = 'all') {
   if (!cls) return;
   const dist = cls.score_distribution;
   const n = cls.count || 1;
@@ -2419,6 +2428,7 @@ function renderNormalOverlay(cls, sem, sheet, type = 'all') {
   const scores = [];
   Object.values(DATA.students).forEach(s => s.records.forEach(r => {
     if (!inclRetaker && r.is_retaker) return;
+    if (program !== 'all' && classInfo(r.sheet_name || '', r.semester).program !== program) return;
     if (recordMatchesClass(r, sem, sheet, type) &&
         r.semester_score != null) scores.push(r.semester_score);
   }));
@@ -2454,11 +2464,12 @@ function renderNormalOverlay(cls, sem, sheet, type = 'all') {
   });
 }
 
-function renderRegression(sem, sheet, type = 'all') {
+function renderRegression(sem, sheet, type = 'all', program = 'all') {
   const pts = [];
   const inclRetaker = getIncludeRetaker('A');
   Object.values(DATA.students).forEach(s => s.records.forEach(r => {
     if (!inclRetaker && r.is_retaker) return;
+    if (program !== 'all' && classInfo(r.sheet_name || '', r.semester).program !== program) return;
     if (recordMatchesClass(r, sem, sheet, type) && r.midterm!=null && r.final!=null)
       pts.push({ x: r.midterm, y: r.final, m: s.name_masked });
   }));
@@ -2514,14 +2525,14 @@ function renderRegression(sem, sheet, type = 'all') {
   });
 }
 
-function renderVarianceBar(sem, sheet) {
+function renderVarianceBar(sem, sheet, program = 'all') {
   const type = document.getElementById('aFilterType')?.value || 'all';
   const inclRetaker = getIncludeRetaker('A');
-  const selectedCompare = updateCompareFilter(sem, sheet, type, inclRetaker);
-  const candidates = availableCompareSems(sem, sheet, type, inclRetaker);
+  const selectedCompare = updateCompareFilter(sem, sheet, type, inclRetaker, program);
+  const candidates = availableCompareSems(sem, sheet, type, inclRetaker, program);
   const prevSem = selectedCompare !== 'auto' ? selectedCompare : candidates[0];
-  const cur = getClassSummary(sem, sheet, type, inclRetaker);
-  const prev = prevSem ? getClassSummary(prevSem, sheet, type, inclRetaker) : null;
+  const cur = getClassSummary(sem, sheet, type, inclRetaker, program);
+  const prev = prevSem ? getClassSummary(prevSem, sheet, type, inclRetaker, program) : null;
 
   if (!cur || !prev) {
     mkChart('chartVariance', {
@@ -3697,29 +3708,51 @@ function renderD() {
     ? allClasses
     : allClasses.filter(c => c.program === filterProg);
 
-  const totalStudents = filtered.reduce((a, c) => a + (c.count || 0), 0);
-  const _weightedScore = filtered.reduce((a, c) => a + (c.avg_semester || 0) * (c.count || 0), 0);
-  const _weightedPass  = filtered.reduce((a, c) => a + (c.pass_rate  || 0) * (c.count || 0), 0);
-  const avgScore = totalStudents > 0
-    ? (_weightedScore / totalStudents).toFixed(1)
-    : '–';
-  const avgPass = totalStudents > 0
-    ? ((_weightedPass / totalStudents) * 100).toFixed(1) + '%'
-    : '–';
+  let _wScore = 0, _wScoreW = 0;
+  let _wPass  = 0, _wPassW  = 0;
+  let _wRetake = 0, _wRetakeW = 0;
+  let _wMid = 0, _wMidW = 0;
+  let _wFin = 0, _wFinW = 0;
+  filtered.forEach(c => {
+    const cnt = Number(c.count) || 0;
+    if (c.avg_semester != null) { _wScore  += c.avg_semester  * cnt; _wScoreW  += cnt; }
+    if (c.pass_rate    != null) { _wPass   += c.pass_rate     * cnt; _wPassW   += cnt; }
+    if (c.retaker_rate != null) { _wRetake += c.retaker_rate  * cnt; _wRetakeW += cnt; }
+    if (c.avg_midterm  != null) { _wMid    += c.avg_midterm   * cnt; _wMidW    += cnt; }
+    if (c.avg_final    != null) { _wFin    += c.avg_final     * cnt; _wFinW    += cnt; }
+  });
+  const totalStudents = filtered.reduce((a, c) => a + (Number(c.count) || 0), 0);
+  const avgScore    = _wScoreW  > 0 ? (_wScore  / _wScoreW).toFixed(2)  : null;
+  const avgPass     = _wPassW   > 0 ? (_wPass   / _wPassW)              : null;
+  const avgRetake   = _wRetakeW > 0 ? (_wRetake / _wRetakeW)            : null;
+  const avgMidterm  = _wMidW    > 0 ? (_wMid    / _wMidW).toFixed(2)   : null;
+  const avgFinal    = _wFinW    > 0 ? (_wFin    / _wFinW).toFixed(2)   : null;
   const programs = [...new Set(filtered.map(c => c.program))];
 
   document.getElementById('dStats').innerHTML = `
     <div class="stat-card" style="--accent-color:var(--accent)">
-      <div class="val">${totalStudents}</div>
+      <div class="val">${totalStudents.toLocaleString()}</div>
       <div class="lbl">總人次 Total</div>
     </div>
     <div class="stat-card" style="--accent-color:var(--accent2)">
-      <div class="val">${avgScore}</div>
-      <div class="lbl">整體均分 Overall Avg</div>
+      <div class="val">${avgScore ?? '–'}</div>
+      <div class="lbl">學期均分 Avg Score</div>
+    </div>
+    <div class="stat-card" style="--accent-color:${avgPass != null && avgPass >= 0.9 ? 'var(--green)' : avgPass != null && avgPass >= 0.7 ? 'var(--accent3)' : 'var(--red)'}">
+      <div class="val">${avgPass != null ? (avgPass * 100).toFixed(1) + '%' : '–'}</div>
+      <div class="lbl">及格率 Pass Rate</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--accent4)">
+      <div class="val">${avgRetake != null ? (avgRetake * 100).toFixed(1) + '%' : '–'}</div>
+      <div class="lbl">重修率 Retaker Rate</div>
     </div>
     <div class="stat-card" style="--accent-color:var(--accent3)">
-      <div class="val">${avgPass}</div>
-      <div class="lbl">整體及格率 Pass Rate</div>
+      <div class="val">${avgMidterm ?? '–'}</div>
+      <div class="lbl">期中均分 Midterm Avg</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--accent)">
+      <div class="val">${avgFinal ?? '–'}</div>
+      <div class="lbl">期末均分 Final Avg</div>
     </div>
     <div class="stat-card" style="--accent-color:var(--accent4)">
       <div class="val">${sems.length}</div>
@@ -4719,7 +4752,7 @@ function bindStaticHandlers() {
   byId('aFilterSheet')    ?.addEventListener('change', () => onAFilterChange('class'));
   byId('aTrendSheet')     ?.addEventListener('change', () => renderTrend());
   byId('aCompareSem')     ?.addEventListener('change', () =>
-    renderVarianceBar(byId('aFilterSem').value, byId('aFilterSheet').value));
+    renderVarianceBar(byId('aFilterSem').value, byId('aFilterSheet').value, byId('aFilterProgram').value));
   byId('cFilterSem')      ?.addEventListener('change', () => onCGeneralFilterChange('semester'));
   byId('cFilterProgram')  ?.addEventListener('change', () => onCGeneralFilterChange('program'));
   byId('dFilterProgram')  ?.addEventListener('change', () => { _syncRetakerBtn('D'); renderD(); });
