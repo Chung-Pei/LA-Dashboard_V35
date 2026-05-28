@@ -2111,6 +2111,7 @@ function renderB() {
 }
 
 function renderSlope(retakers) {
+  if (!retakers) return;                          // Bug D fix: null guard
   _lastSlopeRetakers = retakers;
   const svg = document.getElementById('slopeChart');
   const W = Math.max(svg.parentElement.clientWidth - 20, 300);
@@ -2429,7 +2430,7 @@ function renderProfile(sid) {
         x: {
           type: 'category',
           ticks: { color: '#6b748f', font: { size: 9 } },
-          grid: { color: '#1c2030' },
+          grid: { color: CHART_DEFAULTS.scales.x.grid.color }, // Bug C fix: theme-aware
           offset: true,
         },
         y: { ...CHART_DEFAULTS.scales.y, min: 0, max: 100 }

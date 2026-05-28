@@ -169,7 +169,11 @@ async function staleWhileRevalidate(request) {
       safePut(cache, request, response.clone());
     }
     return response;
-  }).catch(() => null);
+  }).catch(err => {
+    // Bug B fix: log instead of silently swallowing
+    console.warn('[SW] staleWhileRevalidate background fetch failed:', request.url, err?.message);
+    return null;
+  });
 
   // 有快取就立即回傳，無快取才等網路
   return cached || fetchPromise;
@@ -225,14 +229,16 @@ async function safePut(cache, request, response) {
     if (e.name === 'QuotaExceededError') {
       console.warn('[SW] Cache quota exceeded, pruning...');
       await pruneCache(cache);
+      // Bug A fix: retry put after pruning to actually persist the resource
+      try { await cache.put(request, response); } catch { /* give up gracefully */ }
     }
   }
 }
 
 async function pruneCache(cache) {
   const keys = await cache.keys();
-  if (keys.length > 40) {
-    const toDelete = keys.slice(0, keys.length - 40);
+  if (keys.length > 30) {                          // Bug A fix: tighter threshold (30 vs 40)
+    const toDelete = keys.slice(0, keys.length - 30);
     await Promise.all(toDelete.map(k => cache.delete(k)));
   }
 }
