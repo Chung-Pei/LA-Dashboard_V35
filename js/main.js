@@ -27,6 +27,9 @@ let dView   = 'merge';
 let dMetric = 'semester_score';
 let dType   = 'theory';  // 'theory' | 'practicum'
 
+// 快取最後一次 renderSlope 的資料，供放大/縮小後重繪用
+let _lastSlopeRetakers = null;
+
 // Panel D 學期篩選狀態
 let dSemMode     = 'range';   // 'range' | 'multi'
 let dSemRange    = [0, 29];   // [startIdx, endIdx]（索引對應 DATA.meta.semesters）
@@ -654,6 +657,10 @@ function resizeChartsInCard(card) {
   });
   // SVG 類圖表（箱形圖）：容器尺寸改變後重繪，讓 viewBox 基準重算
   if (card.querySelector('#boxplotWrap')) renderD();
+  // SVG 坡度圖（首修 → 重修進退步）：放大/縮小後依新寬度重繪
+  if (card.querySelector('#slopeChart') && _lastSlopeRetakers != null) {
+    renderSlope(_lastSlopeRetakers);
+  }
 }
 
 function closeExpandedChart() {
@@ -2104,6 +2111,7 @@ function renderB() {
 }
 
 function renderSlope(retakers) {
+  _lastSlopeRetakers = retakers;
   const svg = document.getElementById('slopeChart');
   const W = Math.max(svg.parentElement.clientWidth - 20, 300);
   const H = 280;
